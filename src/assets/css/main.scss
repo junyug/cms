@@ -9,4 +9,10 @@ body {
   display: flex;
   box-sizing: border-box;
 }
-* {outline: none;}
+.el-picker-panel {
+  .el-picker-panel__footer {
+    .el-picker-panel__link-btn {
+      display: none;
+    }
+  }
+}

@@ -18,14 +18,15 @@ import {
   Row, Col,
   Table, TableColumn,
   Menu, MenuItem,
-  Button, Input, Form, FormItem,
-  Tabs, TabPane, Dialog,
-  Pagination} from 'element-ui'
+  Button, Input, Checkbox, Upload, Form, FormItem,
+  Tabs, TabPane, Dialog, Pagination,
+  DatePicker, TimePicker, TimeSelect} from 'element-ui'
 // 按需引入样式
 [Row, Col,
   Table, TableColumn, Menu, MenuItem,
-  Button, Input, Form, FormItem,
-  Tabs, TabPane, Dialog, Pagination
+  Button, Input, Checkbox, Upload, Form, FormItem,
+  Tabs, TabPane, Dialog, Pagination,
+  DatePicker, TimePicker, TimeSelect
 ].map(component => {
   Vue.use(component)
 })
@@ -38,7 +39,10 @@ const router = new VueRouter({
 new Vue({
   data () {
     return {
-      buId: 1
+      buId: window.siteConfig.bu_id,
+      server: window.siteConfig.server,
+      preview: window.siteConfig.preview_url,
+      time: window.siteConfig.default_time
     }
   },
   router,

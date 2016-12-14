@@ -4,6 +4,7 @@
  * 提供fetch、get、post三种交互方式,底层调用axios方法实现
  */
 import axios from 'axios'
+import querystring from 'querystring'
 import {Notification} from 'element-ui'
 const $ = axios.create({
   headers: {
@@ -48,7 +49,8 @@ export default {
       })
   },
   post (url, data, callback) {
-    $.post(url, data)
+    // 在浏览器中使用axios post请求时,data数据是form data
+    $.post(url, querystring.stringify(data))
       .then((response) => {
         this.success(response, callback)
       })

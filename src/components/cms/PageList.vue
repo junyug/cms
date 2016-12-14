@@ -1,6 +1,6 @@
 <template>
   <section id='pagelist'>
-    <page-info-dialog :title='dialogTitle' :showEdit="showEdit" :page="pageData" @close="closeDialog"></page-info-dialog>
+    <page-info-dialog :title='dialogTitle' :showEdit="showEdit" :page="pageData" @close="close"></page-info-dialog>
     <el-tabs :active-name='$route.params.type' class="nav-tabs" type="card" @tab-click="handleTabClick">
       <el-tab-pane label='固定页面' name="1"></el-tab-pane>
       <el-tab-pane label='活动页面' name="2"></el-tab-pane>
@@ -148,7 +148,7 @@
         setList: types.SET_PAGE_LIST,
         update: types.UPDATE_PAGE
       }),
-      closeDialog (val) {
+      close (val) {
         this.showEdit = val
       },
       clone (sourceId) {
@@ -164,7 +164,7 @@
         this.update({
           data: {id: pageId, status: status},
           callback: (res) => {
-            let toastInfo = status == 1 ? res.data.name + '已上线' : res.data.name + '已下线'
+            let toastInfo = status == 1 ? res.name + '已上线' : res.name + '已下线'
             Notification.success({title: '提示', message: toastInfo})
           }
         })

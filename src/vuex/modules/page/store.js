@@ -15,7 +15,7 @@ export default {
     [types.UPDATE_PAGE] (state, payload) {
       state.list.forEach((page, index) => {
         if (page.id == payload.data.id) {
-          state.list[index] = payload.data
+          state.list.splice(index, 1, payload.data)
         }
       })
     }
