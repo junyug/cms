@@ -1,20 +1,41 @@
 <template>
   <section id="pageedit">
-    <h1>{{title}}</h1>
+    <el-row type="flex" justify="center" align="top">
+      <el-col :span="8">
+        <section class="preview-box">
+          <preview-container></preview-container>
+        </section>
+      </el-col>
+      <el-col class="bg-purple">
+        <section :class="{'main-editor-box':1, 'main-box-fixed': isFixed}">
+          
+        </section>
+      </el-col>
+    </el-row>
   </section>
 </template>
-<style lang="scss">
-  h1 {
-    text-align: center;
+<style lang="scss" scoped>
+  #pageedit {
+    .bg-purple {
+      background: #e5e9f2;
+    }
+    .main-editor-box {
+      box-sizing: border-box;
+      margin: 0 10px;
+    }
   }
 </style>
 <script>
+  import PreviewContainer from './PreviewContainer'
   export default {
     name: 'pageEdit',
     data () {
       return {
-        title: '编辑页面'
+        isFixed: false
       }
+    },
+    components: {
+      PreviewContainer
     }
   }
 </script>

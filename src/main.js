@@ -38,6 +38,7 @@ import {
 })
 Vue.use(VueRouter)
 Vue.use(VueFilter)
+Vue.use(require('vue-dnd'))
 const router = new VueRouter({
   mode: 'hash',
   routes

@@ -25,6 +25,7 @@ module.exports = {
     alias: {
       'vue$': 'vue/dist/vue.common.js',
       'font-aswsome': path.resolve(__dirname, '../node_modules/font-aswsome'),
+      'vue-dnd': path.resolve(__dirname, '../node_modules/vue-dnd/index.js'),
       'src': path.resolve(__dirname, '../src'),
       'assets': path.resolve(__dirname, '../src/assets'),
       'components': path.resolve(__dirname, '../src/components')

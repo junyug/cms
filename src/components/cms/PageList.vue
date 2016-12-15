@@ -113,8 +113,8 @@
 <script>
   import {mapActions, mapGetters} from 'vuex'
   import * as types from '../../vuex/mutation-types'
-  import Clipboard from 'clipboard'
   import {Notification} from 'element-ui'
+  import Clipboard from 'clipboard'
   import PageInfoDialog from './PageInfoDialog'
   import CloneDialog from './CloneDialog'
   export default {

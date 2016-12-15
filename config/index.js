@@ -27,6 +27,10 @@ module.exports = {
         target: host,
         changeOrigin: true
       },
+      '/page-module': {
+        target: host,
+        changeOrigin: true
+      },
       '/ds-item': {
         target: host,
         changeOrigin: true

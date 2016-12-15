@@ -1,7 +1,10 @@
 import * as types from '../../mutation-types'
 export default {
-  [types.GET_LIST] (state, getters, rootState) {
-    return state.list
+  [types.MODULE_LIST] (state, getters, rootState) {
+    return state.modules
+  },
+  [types.APPLY_MODULE_LIST] (state, getters, rootState) {
+    return state.applyModuleList
   }
 }
 
