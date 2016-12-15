@@ -20,10 +20,10 @@
           :picker-options="pickerOptions">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="分享">
+      <el-form-item label="分享" v-if="$root.buId == 2">
         <el-checkbox v-model="shareOpen">设置分享信息</el-checkbox>
       </el-form-item>
-      <el-row class="share-info-box" type="flex" v-show="shareOpen">
+      <el-row class="share-info-box" type="flex" v-show="$root.buId == 2 && shareOpen">
         <el-col :span="16">
           <el-form-item label="标题">
             <el-input placeholder="少于28个字" size="small" v-model="pageData.share_name" auto-complete="off"></el-input>
@@ -38,12 +38,13 @@
         <el-col :span="8">
           <el-upload class="upload-box"
             action="/ds-item/upload-img"
-            type="drag"
+            type="select"
             :thumbnail-mode="true"
             :with-credentials="true"
             :data="reqopts.form"
             :headers="reqopts.headers"
-            :default-file-list="reqopts.fileList"
+            :default-file-list="fileList"
+            :on-success="uploadSuccess"
           ></el-upload>
         </el-col>
       </el-row>
@@ -55,8 +56,11 @@
 </template>
 <style lang='scss'>
   .dialog-content {
-    .el-input {
-      width: 400px;
+    .el-form-item {
+      margin-bottom: 10px;
+      .el-input {
+        width: 400px;
+      }
     }
     .share-info-box {
       .el-input {
@@ -71,6 +75,9 @@
       .el-upload__inner {
         height: 102px;
         width: 100%;
+        .el-dragger__cover__interact {
+          top: -30px;
+        }
       }
     }
   }
@@ -78,6 +85,7 @@
 <script>
   import {mapActions} from 'vuex'
   import * as types from '../../vuex/mutation-types'
+  import {Notification} from 'element-ui'
   import defaultIcon from '../../assets/image/icon-default.png'
   export default {
     name: 'pageInfoDialog',
@@ -93,9 +101,7 @@
           form: {'template_code': 'share'},
           headers: {
             accept: 'application/json, text/javascript, */*;'
-          },
-          fileList: [{name: 'defaultIcon', url: defaultIcon}]
-
+          }
         },
         pickerOptions: {
           shortcuts: [
@@ -125,6 +131,9 @@
       dialogVisible () {
         return this.showEdit
       },
+      fileList () {
+        return [{name: this.pageData.share_img || 'defaultIcon', url: this.pageData.share_img_url || defaultIcon}]
+      },
       'endtime': {
         get () {
           return this.pageData.end_time * 1000
@@ -150,6 +159,16 @@
       closeDialog () {
         this.$emit('close', false)
       },
+      uploadSuccess (response, file, fileList) {
+        if (response.ret !== 1) {
+          Notification.error({title: '提示', message: response.error.msg})
+          this.fileList = fileList = fileList.splice(1, 1)
+        } else {
+          let imgData = response.data
+          this.pageData.share_img = imgData.img
+          this.pageData.share_img_url = imgData.img_url
+        }
+      },
       createPage () {
         if (this.pageData.share_img == defaultIcon) {
           this.pageData.share_img = ''
@@ -168,6 +187,7 @@
           data: this.pageData,
           callback: (res) => {
             this.closeDialog()
+            Notification.success({title: '提示', message: '修改成功'})
           }
         })
       },

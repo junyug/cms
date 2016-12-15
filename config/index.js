@@ -26,6 +26,10 @@ module.exports = {
       '/page': {
         target: host,
         changeOrigin: true
+      },
+      '/ds-item': {
+        target: host,
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

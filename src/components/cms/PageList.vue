@@ -1,7 +1,7 @@
 <template>
   <section id='pagelist'>
     <page-info-dialog :title='dialogTitle' :showEdit="showEdit" :page="pageData" @close="close"></page-info-dialog>
-    <el-tabs :active-name='$route.params.type' class="nav-tabs" type="card" @tab-click="handleTabClick">
+    <el-tabs :active-name='$route.params.type.toString()' class="nav-tabs" type="card" @tab-click="handleTabClick">
       <el-tab-pane label='固定页面' name="1"></el-tab-pane>
       <el-tab-pane label='活动页面' name="2"></el-tab-pane>
       <el-tab-pane label='其他页面' name="3"></el-tab-pane>
@@ -15,14 +15,14 @@
         <el-button type='primary' @click="edit(initPage)">新建页面</el-button>
       </el-col>
     </el-row>
-    <el-table :data='list'>
+    <el-table :data='list' class="list-box">
       <el-table-column prop='id' label="页面ID"></el-table-column>
       <el-table-column prop='name' label="页面名称"></el-table-column>
       <el-table-column prop='remark' label="备注"></el-table-column>
       <el-table-column inline-template label='过期时间'>
         <span>{{row.end_time*1000|date('%F %T')}}</span>
       </el-table-column>
-      <el-table-column inline-template label='操作' align="center" width="360">
+      <el-table-column inline-template label='' align="center" width="360">
         <span class='opera-box'>
           <button type='button' @click="edit(row)">
             <i class='el-icon-edit'></i>
@@ -55,9 +55,18 @@
 <style lang='scss' scoped>
   #pagelist {
     padding: 10px 20px;
-    .dialog-content {
-      .el-input {
-        width: 400px;
+    .list-box {
+      .opera-box {
+        visibility: hidden;
+      }
+      tbody {
+        tr {
+          &:hover {
+            .opera-box {
+              visibility: visible;
+            }
+          }
+        }
       }
     }
     .opera-box {
