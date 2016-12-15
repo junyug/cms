@@ -5,23 +5,20 @@
  */
 import API from './fetch'
 const interfaces = {
-  getPageTypesList: '/page/get-page-types',
-  getCitys: '/page/get-city-list',
   add: '/page/add-page',
-  addMarketPage: '/page/add-market-page',
-  getPageData: '/page/get-page-data',
-  getMarketData: '/page/get-page-market-data',
-  clonePage: '/page/clone-page',
-  getPageById: '/page/get-by-id',
-  update: '/page/update-by-id'
+  addMarket: '/page/add-market-page',
+  update: '/page/update-by-id',
+  list: '/page/get-page-data',
+  marketList: '/page/get-page-market-data',
+  clone: '/page/clone-page',
+  typeList: '/page/get-page-types',
+  cityList: '/page/get-city-list',
+  getPageById: '/page/get-by-id'
 }
 export default {
-  getLastTimeline (pageId, success) {
-    API.get(interfaces.getLastTimeline, {'page_id': pageId}, success)
-  },
   add (data, success) {
     if (data.type == 4) {
-      API.post(interfaces.addMarketPage, data, success)
+      API.post(interfaces.addMarket, data, success)
     } else {
       API.post(interfaces.add, data, success)
     }
@@ -29,27 +26,27 @@ export default {
   update (data, success) {
     API.post(interfaces.update, data, success)
   },
-  getList (data, success) {
+  list (data, success) {
     if (data.type == 4) {
-      API.get(interfaces.getMarketData, data, success)
+      API.get(interfaces.marketList, data, success)
     } else {
-      API.get(interfaces.getPageData, data, success)
+      API.get(interfaces.list, data, success)
     }
   },
-  getCitys (data, success) {
-    API.get(interfaces.getCitys, data, success)
+  clone (data, success) {
+    API.post(interfaces.clone, data, success)
   },
-  getPageTypesList (data, success) {
-    API.get(interfaces.getPageTypesList, data, success)
+  cityList (data, success) {
+    API.get(interfaces.cityList, data, success)
+  },
+  typeList (data, success) {
+    API.get(interfaces.typeList, data, success)
   },
   getPageById (data, success) {
     API.get(interfaces.getPageById, data, success)
   },
   deletePageModuleById (data, success) {
     API.post(interfaces.deletePageModule, data, success)
-  },
-  clonePage (data, success) {
-    API.post(interfaces.clonePage, data, success)
   },
   getModuleGroupList (data, success) {
     API.get(interfaces.getModuleGroupList, data, success)

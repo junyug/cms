@@ -1,6 +1,7 @@
 <template>
   <section id='pagelist'>
     <page-info-dialog :title='dialogTitle' :showEdit="showEdit" :page="pageData" @close="close"></page-info-dialog>
+    <clone-dialog :title='dialogTitle' :showEdit="showClone" :pageId="id" @close="close"></clone-dialog>
     <el-tabs :active-name='$route.params.type.toString()' class="nav-tabs" type="card" @tab-click="handleTabClick">
       <el-tab-pane label='固定页面' name="1"></el-tab-pane>
       <el-tab-pane label='活动页面' name="2"></el-tab-pane>
@@ -17,7 +18,9 @@
     </el-row>
     <el-table :data='list' class="list-box">
       <el-table-column prop='id' label="页面ID"></el-table-column>
-      <el-table-column prop='name' label="页面名称"></el-table-column>
+      <el-table-column label="页面名称" inline-template>
+        <router-link :to="{ name: 'pageedit', params: {id: row.id }}">{{row.name}}</router-link>
+      </el-table-column>
       <el-table-column prop='remark' label="备注"></el-table-column>
       <el-table-column inline-template label='过期时间'>
         <span>{{row.end_time*1000|date('%F %T')}}</span>
@@ -113,13 +116,16 @@
   import Clipboard from 'clipboard'
   import {Notification} from 'element-ui'
   import PageInfoDialog from './PageInfoDialog'
+  import CloneDialog from './CloneDialog'
   export default {
     name: 'pageList',
     data () {
       return {
+        id: 0,
         total: 0,
         dialogTitle: '',
         showEdit: false,
+        showClone: false,
         currentPage: 1,
         pageData: { },
         initPage: {
@@ -159,9 +165,12 @@
       }),
       close (val) {
         this.showEdit = val
+        this.showClone = val
       },
       clone (sourceId) {
-        console.log(sourceId)
+        this.dialogTitle = '克隆页面'
+        this.showClone = true
+        this.id = sourceId
       },
       edit (page) {
         this.dialogTitle = '新建页面'
@@ -210,7 +219,7 @@
       }
     },
     components: {
-      PageInfoDialog
+      PageInfoDialog, CloneDialog
     },
     created () {
       // 初始化页面类型

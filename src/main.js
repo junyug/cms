@@ -18,13 +18,19 @@ import {
   Row, Col,
   Table, TableColumn,
   Menu, MenuItem,
-  Button, Input, Checkbox, Upload, Form, FormItem,
+  Button, Input, CheckboxGroup, Checkbox,
+  Select, Option, Radio, RadioGroup,
+  Dropdown, DropdownItem, DropdownMenu,
+  Upload, Form, FormItem,
   Tabs, TabPane, Dialog, Pagination,
   DatePicker, TimePicker, TimeSelect} from 'element-ui'
 // 按需引入样式
 [Row, Col,
   Table, TableColumn, Menu, MenuItem,
-  Button, Input, Checkbox, Upload, Form, FormItem,
+  Button, Input, CheckboxGroup, Checkbox,
+  Select, Option, Radio, RadioGroup,
+  Dropdown, DropdownItem, DropdownMenu,
+  Upload, Form, FormItem,
   Tabs, TabPane, Dialog, Pagination,
   DatePicker, TimePicker, TimeSelect
 ].map(component => {
