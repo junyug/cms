@@ -18,6 +18,7 @@
     "element-ui": "^1.0.5",
     "font-awesome": "^4.7.0",
     "vue": "^2.1.0",
+    "vue-dnd": "https://github.com/junyug/vue-draggable.git",
     "vue-filter": "^0.1.9",
     "vue-router": "^2.1.1",
     "vuex": "^2.0.0"

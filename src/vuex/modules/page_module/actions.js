@@ -12,6 +12,12 @@ export default {
       commit(types.SET_APPLY_MODULE_LIST, {list: res})
       if (payload.callback) payload.callback(res)
     })
+  },
+  [types.SORT_MODULES] ({commit}, payload) {
+    pageModuleApi.sort(payload.data, (res) => {
+      // commit(types.SET_APPLY_MODULE_LIST, {list: res})
+      if (payload.callback) payload.callback(res)
+    })
   }
 }
 

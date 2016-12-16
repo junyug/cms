@@ -1,7 +1,7 @@
 <template>
   <section id="pageedit">
     <el-row type="flex" justify="center" align="top">
-      <el-col :span="8">
+      <el-col class="wrap-container">
         <section class="preview-box">
           <preview-container></preview-container>
         </section>
@@ -16,6 +16,9 @@
 </template>
 <style lang="scss" scoped>
   #pageedit {
+    .wrap-container {
+      width: 330px;
+    }
     .bg-purple {
       background: #e5e9f2;
     }
