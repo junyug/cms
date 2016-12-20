@@ -1,25 +1,30 @@
 <template>
  <div class="wrapper">
-    <div class="preview-container" > <div class="components-box">
-        <div class="component-item-box" v-for="(module, index) of applyModules"
+    <div class="preview-container" >
+      <div class="components-box">
+        <div :class="['component-item-box', {'edit': activeId == module.id}]"
+          v-for="(module, index) of applyModules"
           v-draggable:y="{index: index, dragged: 'dragged', 'module': module}"
           v-dropzone:y="{index: index, handler: sort}"
+          v-dropzone:x="{index: index, handler: copy}"
+          @click="editComponent(module)"
         >
           <empty v-if="module.module.template_code == 'template_empty'"></empty>
-          <slide v-if="module.module.template_code == 'slide'"></slide>
-          <icon-1x4 v-if="module.module.template_code == 'icon_1x4'"></icon-1x4>
-          <img-1xn v-if="module.module.template_code == 'img_1xn'"></img-1xn>
-          <img-2xn v-if="module.module.template_code == 'img_2xn'"></img-2xn>
-          <img-3xn v-if="module.module.template_code == 'img_3xn'"></img-3xn>
-          <img-2xn_1 v-if="module.module.template_code == 'img_2xn_1'"></img-2xn_1>
-          <img-1xnx3 v-if="module.module.template_code == 'img_1xnx3'"></img-1xnx3>
-          <good-1xn v-if="module.module.template_code == 'goods_1xn'"></good-1xn>
-          <good-2xn v-if="module.module.template_code == 'goods_2xn'"></good-2xn>
-          <good-3xn v-if="module.module.template_code == 'goods_3xn'"></good-3xn>
-          <group-tab-1xn v-if="module.module.template_code == 'group_tab_1xn'"></group-tab-1xn>
-          <group-seckill-1xn v-if="module.module.template_code == 'group_seckill_1xn'"></group-seckill-1xn>
-          <text v-if="module.module.template_code == 'text'"></text>
-          <text-title-1 v-if="module.module.template_code == 'text_title_1'"></text-title-1>
+          <slide :id="activeId" :module="module" v-if="module.module.template_code == 'slide'"></slide>
+          <icon-1x4 :id="activeId" :module="module" v-if="module.module.template_code == 'icon_1x4'"></icon-1x4>
+          <img-1xn :id="activeId" :module="module" v-if="module.module.template_code == 'img_1xn'"></img-1xn>
+          <img-2xn :id="activeId" :module="module" v-if="module.module.template_code == 'img_2xn'"></img-2xn>
+          <img-3xn :id="activeId" :module="module" v-if="module.module.template_code == 'img_3xn'"></img-3xn>
+          <img-2xnx1 :id="activeId" :module="module" v-if="module.module.template_code == 'img_2xn_1'"></img-2xnx1>
+          <img-1xnx3 :id="activeId" :module="module" v-if="module.module.template_code == 'img_1xnx3'"></img-1xnx3>
+          <good-1xn :id="activeId" :module="module" v-if="module.module.template_code == 'goods_1xn'"></good-1xn>
+          <good-2xn :id="activeId" :module="module" v-if="module.module.template_code == 'goods_2xn'"></good-2xn>
+          <good-3xn :id="activeId" :module="module" v-if="module.module.template_code == 'goods_3xn'"></good-3xn>
+          <group-tab-1xn :id="activeId" :module="module" v-if="module.module.template_code == 'group_tab_1xn'"></group-tab-1xn>
+          <group-seckill-1xn :id="activeId" :module="module" v-if="module.module.template_code == 'group_seckill_1xn'"></group-seckill-1xn>
+          <txt :id="activeId" :module="module" v-if="module.module.template_code == 'text'"></txt>
+          <text-title-1 :id="activeId" :module="module" v-if="module.module.template_code == 'text_title_1'"></text-title-1>
+          <popup :id="activeId" :module="module" v-if="module.module.template_code == 'popup'"></popup>
         </div>
       </div>
     </div>
@@ -47,13 +52,58 @@
     background-size: 100% auto;
     .components-box {
       width: 248px;
-      overflow: hidden;
+      max-width: 248px;
     }
     .component-item-box {
+      position: relative;
       background: #e5e9f2;
       margin-bottom: 5px;
       position: relative;
-      overflow: hidden;
+      .component-name {
+        position: absolute;
+        z-index: 2;
+        left: 0;
+        top: 2px;
+        background: rgba(4,4,4,.5);
+        padding: 2px 10px;
+        color: #fff;
+        font-size: 12px;
+      }
+      .el-form-item {
+        margin-bottom: 0;
+        margin-right: 0;
+        .el-input--small {
+          width: 148px;
+          display: inline-block;
+        }
+        .el-button {
+          margin-left: 0;
+        }
+      }
+      &.edit {
+        border: 2px dashed #FF4949;
+        a {
+          cursor: pointer;
+          position: absolute;
+        }
+      }
+      .btn-delete {
+        color: #FF4949;
+        top: -10px;
+        right: -10px;
+      }
+      .btn-edit {
+        background: #FF4949;
+        border-radius: 100%;
+        color: #F9FAFC;
+        font-size: 12px;
+        padding: 8px;
+        text-align: center;
+        span {
+          padding: 2px;
+          display: block;
+        }
+      }
       img {
         width: 100%;
       }
@@ -74,7 +124,7 @@
   import Good1xn from '../modules/templates/goods_1xn'
   import Good2xn from '../modules/templates/goods_2xn'
   import Good3xn from '../modules/templates/goods_3xn'
-  import Text from '../modules/templates/text'
+  import Txt from '../modules/templates/text'
   import TextTitle1 from '../modules/templates/text_title_1'
   import Popup from '../modules/templates/popup'
   import GroupTab1xn from '../modules/templates/group_tab_1xn'
@@ -83,7 +133,7 @@
     name: 'previewContainer',
     data () {
       return {
-        showModule: false
+        activeId: 0
       }
     },
     computed: {
@@ -95,8 +145,29 @@
     methods: {
       ...mapActions({
         applyModuleList: types.SET_APPLY_MODULE_LIST,
-        sortModuleList: types.SORT_MODULES
+        sortModuleList: types.SORT_MODULES,
+        addModule: types.ADD_MODULE
       }),
+      editComponent (module) {
+        if (module.id !== -1) {
+          this.activeId = module.id
+        }
+      },
+      copy (targetIndex, data) {
+        let pageModule = {}
+        pageModule['module'] = data.module
+        this.addModule({
+          data: {
+            page_id: this.$route.params.id,
+            module_id: data.module.id,
+            module_index: targetIndex
+          },
+          callback: (res) => {
+            // 插入新module重新排序
+            this.sortModules()
+          }
+        })
+      },
       sort (targetIndex, data) {
         let list = this.applyModules
         if (data.module.id == '-1') return
@@ -123,7 +194,7 @@
       Slide, Empty, Icon1x4, Popup,
       Img1xn, Img2xn, Img3xn, Img2xnx1, Img1xnx3,
       Good1xn, Good2xn, Good3xn,
-      Text, TextTitle1,
+      Txt, TextTitle1,
       GroupTab1xn, GroupSeckill1xn
     },
     created () {

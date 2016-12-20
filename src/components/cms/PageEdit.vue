@@ -8,7 +8,7 @@
       </el-col>
       <el-col class="bg-purple">
         <section :class="{'main-editor-box':1, 'main-box-fixed': isFixed}">
-          
+          <module-list></module-list>
         </section>
       </el-col>
     </el-row>
@@ -30,6 +30,7 @@
 </style>
 <script>
   import PreviewContainer from './PreviewContainer'
+  import ModuleList from './ModuleList'
   export default {
     name: 'pageEdit',
     data () {
@@ -38,7 +39,7 @@
       }
     },
     components: {
-      PreviewContainer
+      PreviewContainer, ModuleList
     }
   }
 </script>

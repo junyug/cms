@@ -19,6 +19,12 @@ a {
     color: #20a0ff;
   }
 }
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 [draggable] {
   -moz-user-select: none;
   -khtml-user-select: none;
@@ -29,7 +35,10 @@ a {
   -webkit-user-drag: element;
 }
 .dragged {
-  border: 2px dotted #C0CCDA;
+  img {
+    border: 2px dotted #C0CCDA;
+    opacity: 0.4;
+  }
 }
 .x {
   border-bottom: 20px solid greenyellow;
@@ -37,6 +46,14 @@ a {
 }
 .y {
   border-top: 7px solid #F7BA2A;
+}
+.clearfix {
+  &:after {
+    display: block;
+    content: '';
+    clear: both;
+    overflow: hidden;
+  }
 }
 .el-picker-panel {
   .el-picker-panel__footer {
