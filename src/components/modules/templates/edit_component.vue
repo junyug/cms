@@ -1,9 +1,9 @@
 <template>
   <div class="edit-component">
-    <span class="component-name" v-show="!showForm">{{module.name}}</span>
+    <span class="component-name" v-show="!showForm && module.name">{{module.name}}</span>
     <div v-show="isEdit">
-      <a class="btn-delete"><i class="el-icon-circle-close"></i></a>
-      <a class="center btn-edit" @click="show">
+      <a class="btn-delete" @click="deleteModule"><i class="el-icon-circle-close"></i></a>
+      <a class="center btn-edit" @click.stop="show">
         <i class="el-icon-edit"></i>
         <span>编辑</span>
       </a>
@@ -20,6 +20,8 @@
   </div>
 </template>
 <script>
+  import * as types from '../../../vuex/mutation-types'
+  import {mapActions} from 'vuex'
   export default {
     props: ['isEdit', 'module'],
     data () {
@@ -40,14 +42,32 @@
       }
     },
     methods: {
+      ...mapActions({
+        update: types.UPDATE_MODULE,
+        deleteById: types.DELETE_MODULE
+      }),
       show () {
+        if (this.showForm) return
         this.showForm = true
       },
       cancel () {
         this.showForm = false
       },
       submit () {
-        console.log(this.component)
+        this.update({
+          data: {id: this.component.id, name: this.component.name},
+          callback: (data) => {
+            this.showForm = false
+          }
+        })
+      },
+      deleteModule () {
+        this.deleteById({
+          data: {id: this.component.id},
+          callback: (data) => {
+            console.log(Object.assign({}, data))
+          }
+        })
       }
     }
   }

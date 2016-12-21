@@ -5,6 +5,9 @@ export default {
   },
   [types.APPLY_MODULE_LIST] (state, getters, rootState) {
     return state.applyModuleList
+  },
+  [types.OPERATE_MODULE] (state, getters, rootState) {
+    return state.operateModule
   }
 }
 

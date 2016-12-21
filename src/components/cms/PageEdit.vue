@@ -3,12 +3,13 @@
     <el-row type="flex" justify="center" align="top">
       <el-col class="wrap-container">
         <section class="preview-box">
-          <preview-container></preview-container>
+          <preview-container @switchBox="switchBox"></preview-container>
         </section>
       </el-col>
       <el-col class="bg-purple">
         <section :class="{'main-editor-box':1, 'main-box-fixed': isFixed}">
-          <module-list></module-list>
+          <module-list v-if="modulesShow"></module-list>
+          <timeline-edit v-if="timelineShow"></timeline-edit>
         </section>
       </el-col>
     </el-row>
@@ -31,15 +32,24 @@
 <script>
   import PreviewContainer from './PreviewContainer'
   import ModuleList from './ModuleList'
+  import TimelineEdit from './TimelineEdit'
   export default {
     name: 'pageEdit',
     data () {
       return {
-        isFixed: false
+        isFixed: false,
+        modulesShow: true,
+        timelineShow: false
+      }
+    },
+    methods: {
+      switchBox (value) {
+        this.modulesShow = value.modulesShow
+        this.timelineShow = value.timelineShow
       }
     },
     components: {
-      PreviewContainer, ModuleList
+      PreviewContainer, ModuleList, TimelineEdit
     }
   }
 </script>

@@ -21,13 +21,32 @@ export default {
       }
     },
     [types.ADD_MODULE] (state, payload) {
-      debugger
       if (state.applyModuleList.length === 1 && state.applyModuleList[0].id == -1) {
         state.pageModules.splice(0, 1)
         state.pageModules.push(payload.data)
       } else {
         state.applyModuleList.splice(payload.index + 1, 0, payload.data)
       }
+    },
+    [types.UPDATE_MODULE] (state, payload) {
+      state.applyModuleList.forEach((module, index) => {
+        if (module.id == payload.data.id) {
+          state.applyModuleList.splice(index, 1, payload.data)
+        }
+      })
+    },
+    [types.DELETE_MODULE] (state, payload) {
+      state.applyModuleList.forEach((module, index) => {
+        if (module.id == payload.data.id) {
+          state.applyModuleList.splice(index, 1)
+          if (!state.applyModuleList.length) {
+            state.applyModuleList.push(state.moduleEmpty)
+          }
+        }
+      })
+    },
+    [types.SET_OPERATE_MODULE] (state, payload) {
+      state.operateModule = payload.data
     }
   },
   getters: getters,

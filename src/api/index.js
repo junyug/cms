@@ -5,7 +5,9 @@
  */
 import pageApi from './pageApi'
 import pageModuleApi from './pageModuleApi'
+import dsTimelineApi from './dsTimelineApi'
 export {
   pageApi,
-  pageModuleApi
+  pageModuleApi,
+  dsTimelineApi
 }

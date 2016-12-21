@@ -3,150 +3,21 @@ import actions from './actions'
 import getters from './getters'
 export default {
   state: {
-    list: [
-      {
-        'id': 167,
-        'city_id': 1,
-        'bu_id': 2,
-        'name': '首页最后测试（不要乱动）',
-        'keyword': '',
-        'type': 1,
-        'remark': '备注',
-        'operator_id': 31478,
-        'status': 1,
-        'is_share': 0,
-        'share_name': '',
-        'share_img': '',
-        'share_url': '',
-        'share_desc': '',
-        'start_time': 1480055931,
-        'end_time': 2145888000,
-        'c_t': 1480055917,
-        'u_t': 1480501704,
-        'str_start_time': '2016/11/25 14:38:51',
-        'str_end_time': '2038/01/01 00:00:00',
-        'share_img_url': ''
-      },
-      {
-        'id': 166,
-        'city_id': 1,
-        'bu_id': 2,
-        'name': '首页',
-        'keyword': '',
-        'type': 1,
-        'remark': '',
-        'operator_id': 6792,
-        'status': 1,
-        'is_share': 1,
-        'share_name': '分享名称',
-        'share_img': '39,0d3573a94b33',
-        'share_url': 'www.yunshanmeicai.cn',
-        'share_desc': '微信分享描述',
-        'start_time': 1479985597,
-        'end_time': 2145888000,
-        'c_t': 1479996128,
-        'u_t': 1479996151,
-        'str_start_time': '2016/11/24 19:06:37',
-        'str_end_time': '2038/01/01 00:00:00',
-        'share_img_url': 'http://mall.cos.download.test.yunshanmeicai.com/39,0d3573a94b33'
-      },
-      {
-        'id': 164,
-        'city_id': 1,
-        'bu_id': 2,
-        'name': '所有模块测试--勿动',
-        'keyword': '',
-        'type': 1,
-        'remark': '',
-        'operator_id': 6792,
-        'status': 1,
-        'is_share': 1,
-        'share_name': '分享名称',
-        'share_img': '39,0d3573a94b33',
-        'share_url': 'www.yunshanmeicai.cn',
-        'share_desc': '微信分享描述',
-        'start_time': 1479985597,
-        'end_time': 2145888000,
-        'c_t': 1479985631,
-        'u_t': 1479987623,
-        'str_start_time': '2016/11/24 19:06:37',
-        'str_end_time': '2038/01/01 00:00:00',
-        'share_img_url': 'http://mall.cos.download.test.yunshanmeicai.com/39,0d3573a94b33'
-      },
-      {
-        'id': 158,
-        'city_id': 1,
-        'bu_id': 2,
-        'name': '冯伟app测试_副本',
-        'keyword': '',
-        'type': 1,
-        'remark': '',
-        'operator_id': 6792,
-        'status': 1,
-        'is_share': 0,
-        'share_name': '',
-        'share_img': '/static/dev/img/icon-default.ffa30f7.png',
-        'share_url': '',
-        'share_desc': '',
-        'start_time': 1479869534,
-        'end_time': 2145888000,
-        'c_t': 1479903872,
-        'u_t': 1479903872,
-        'str_start_time': '2016/11/23 10:52:14',
-        'str_end_time': '2038/01/01 00:00:00',
-        'share_img_url': 'http://mall.cos.download.test.yunshanmeicai.com//static/dev/img/icon-default.ffa30f7.png'
-      },
-      {
-        'id': 155,
-        'city_id': 1,
-        'bu_id': 2,
-        'name': '冯伟app测试_副本',
-        'keyword': '',
-        'type': 1,
-        'remark': '',
-        'operator_id': 6792,
-        'status': 1,
-        'is_share': 0,
-        'share_name': '',
-        'share_img': '/static/dev/img/icon-default.ffa30f7.png',
-        'share_url': '',
-        'share_desc': '',
-        'start_time': 1479869534,
-        'end_time': 2145888000,
-        'c_t': 1479903815,
-        'u_t': 1479903815,
-        'str_start_time': '2016/11/23 10:52:14',
-        'str_end_time': '2038/01/01 00:00:00',
-        'share_img_url': 'http://mall.cos.download.test.yunshanmeicai.com//static/dev/img/icon-default.ffa30f7.png'
-      },
-      {
-        'id': 154,
-        'city_id': 1,
-        'bu_id': 2,
-        'name': '冯伟app测试_副本',
-        'keyword': '',
-        'type': 1,
-        'remark': '',
-        'operator_id': 6792,
-        'status': 1,
-        'is_share': 0,
-        'share_name': '',
-        'share_img': '/static/dev/img/icon-default.ffa30f7.png',
-        'share_url': '',
-        'share_desc': '',
-        'start_time': 1479869534,
-        'end_time': 2145888000,
-        'c_t': 1479903726,
-        'u_t': 1479903726,
-        'str_start_time': '2016/11/23 10:52:14',
-        'str_end_time': '2038/01/01 00:00:00',
-        'share_img_url': 'http://mall.cos.download.test.yunshanmeicai.com//static/dev/img/icon-default.ffa30f7.png'
-      }
-    ]
+    list: []
   },
   mutations: {
-    [types.SET_PAGE_LIST] (state, payload) {
+    [types.SET_MODULE_TIMELINE_LIST] (state, payload) {
       state.list = payload.list
+    },
+    [types.ADD_TIMELINE] (state, payload) {
+      state.list.push(payload.data)
+    },
+    [types.UPDATE_TIMELINE] (state, payload) {
+      state.list.forEach((timeline, index) => {
+        if (timeline.id == payload.data.id) {
+          state.list.splice(index, 1, payload.data)
+        }
+      })
     }
   },
   getters: getters,

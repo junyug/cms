@@ -7,7 +7,7 @@
           v-draggable:y="{index: index, dragged: 'dragged', 'module': module}"
           v-dropzone:y="{index: index, handler: sort}"
           v-dropzone:x="{index: index, handler: copy}"
-          @click="editComponent(module)"
+          @click.stop="editComponent(module)"
         >
           <empty v-if="module.module.template_code == 'template_empty'"></empty>
           <slide :id="activeId" :module="module" v-if="module.module.template_code == 'slide'"></slide>
@@ -26,6 +26,9 @@
           <text-title-1 :id="activeId" :module="module" v-if="module.module.template_code == 'text_title_1'"></text-title-1>
           <popup :id="activeId" :module="module" v-if="module.module.template_code == 'popup'"></popup>
         </div>
+      </div>
+      <div class="add-btn-con">
+        <el-button type="success" @click.stop="showModuleBox">添加模块</el-button>
       </div>
     </div>
      <div class="bottom"></div>
@@ -50,6 +53,11 @@
     padding: 0px 40px 0 43px;
     background: #fff url('../../assets/image/p2.png') repeat-y 0 0;
     background-size: 100% auto;
+    .add-btn-con {
+      padding: 10px 0;
+      text-align: center;
+      button {width: 80%;}
+    }
     .components-box {
       width: 248px;
       max-width: 248px;
@@ -146,12 +154,32 @@
       ...mapActions({
         applyModuleList: types.SET_APPLY_MODULE_LIST,
         sortModuleList: types.SORT_MODULES,
-        addModule: types.ADD_MODULE
+        addModule: types.ADD_MODULE,
+        setOperateModule: types.SET_OPERATE_MODULE,
+        setTimelineList: types.SET_MODULE_TIMELINE_LIST
       }),
+      showModuleBox () {
+        this.$emit('switchBox', {modulesShow: true, timelineShow: false})
+      },
       editComponent (module) {
+        if (this.activeId == module.id) return
         if (module.id !== -1) {
           this.activeId = module.id
+          this.setOperateModule({
+            data: {id: module.id},
+            callback: (data) => {
+              this.setModuleData(data.id)
+            }
+          })
         }
+      },
+      setModuleData (pageModuleId) {
+        this.setTimelineList({
+          data: {page_module_id: pageModuleId},
+          callback: (data) => {
+            this.$emit('switchBox', {modulesShow: false, timelineShow: true})
+          }
+        })
       },
       copy (targetIndex, data) {
         let pageModule = {}

@@ -31,6 +31,10 @@ module.exports = {
         target: host,
         changeOrigin: true
       },
+      '/ds-timeline': {
+        target: host,
+        changeOrigin: true
+      },
       '/ds-item': {
         target: host,
         changeOrigin: true
