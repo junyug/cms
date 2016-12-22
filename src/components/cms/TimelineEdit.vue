@@ -184,6 +184,7 @@
         this.timeline.style['padding'] = 0
         this.timeline.name = ''
         this.timeline.id = 0
+        this.timeline.ds_timeline_id = 0
         this.timeline.page_module_id = this.module.id
       },
       editTimeline (timeline) {
