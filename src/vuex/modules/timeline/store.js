@@ -18,6 +18,13 @@ export default {
           state.list.splice(index, 1, payload.data)
         }
       })
+    },
+    [types.DELETE_TIMELINE] (state, payload) {
+      state.list.forEach((timeline, index) => {
+        if (timeline.id == payload.data.id) {
+          state.list.splice(index, 1)
+        }
+      })
     }
   },
   getters: getters,

@@ -22,7 +22,7 @@ import {
   Select, Option, Radio, RadioGroup, Switch,
   Dropdown, DropdownItem, DropdownMenu,
   Upload, Form, FormItem,
-  Tabs, TabPane, Dialog, Pagination,
+  Tabs, TabPane, Dialog, Pagination, Tag, Popover,
   DatePicker, TimePicker, TimeSelect} from 'element-ui'
 // 按需引入样式
 [Row, Col,
@@ -31,7 +31,7 @@ import {
   Select, Option, Radio, RadioGroup, Switch,
   Dropdown, DropdownItem, DropdownMenu,
   Upload, Form, FormItem,
-  Tabs, TabPane, Dialog, Pagination,
+  Tabs, TabPane, Dialog, Pagination, Tag, Popover,
   DatePicker, TimePicker, TimeSelect
 ].map(component => {
   Vue.use(component)

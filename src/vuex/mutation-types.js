@@ -34,6 +34,9 @@ export const OPERATE_MODULE = 'page_module/OPERATE_MODULE'
 // ds-timeline types
 // set state types
 export const SET_MODULE_TIMELINE_LIST = 'timeline/SET_MODULE_TIMELINE_LIST'
+export const ADD_TIMELINE = 'timeline/ADD_TIMELINE'
+export const UPDATE_TIMELINE = 'timeline/UPDATE_TIMELINE'
+export const DELETE_TIMELINE = 'timeline/DELETE_TIMELINE'
 
 // getters types
 export const MODULE_TIMELINE_LIST = 'timeline/MODULE_TIMELINE_LIST'

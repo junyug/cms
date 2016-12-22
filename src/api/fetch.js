@@ -39,8 +39,8 @@ export default {
       }
     })
   },
-  get (url, data, callback) {
-    $.get(url, {params: data})
+  get (url, params, callback) {
+    $.get(url, {params: params})
       .then((response) => {
         this.success(response, callback)
       })

@@ -4,7 +4,7 @@
     <h3 class="component-title">{{title}}</h3>
     <div class="timeline-list-box">
       <ul class="timeline-list">
-        <li class="clearfix timeline-item new-timeline" @click="addTimeline">
+        <li class="clearfix timeline-item new-timeline" @click.stop="addTimeline">
           <span class="arrow-icon"><i class="el-icon-circle-close"></i></span>
           <span class="timeline-time">新建时间线</span>
         </li>
@@ -13,7 +13,17 @@
           <span  class="timeline-time">
             {{item.start_time * 1000|date('%Y-%m-%d %T')}}
             <a title="编辑" @click.stop="editTimeline(item)" class="btn-edit"><i class="el-icon-edit"></i></a>
-            <a title="删除" @click.stop="deleteTimeline(item)" class="btn-delete"><i class="el-icon-close"></i></a>
+            <el-popover
+              ref="pop"
+              placement="top-end"
+              width="160">
+              <p>确定要删除该时间线吗？</p>
+              <div style="text-align: right; margin: 0">
+                <el-button size="mini" type="text" @click.stop="cancel(index)">取消</el-button>
+                <el-button type="primary" size="mini" @click.stop="confirmDel(index)">确定</el-button>
+              </div>
+              <a title="删除" slot="reference" class="btn-delete" @click.stop="deleteTimeline(item)"><i class="el-icon-close"></i></a>
+            </el-popover>
           </span>
           <span class="timeline-alias">{{item.name}}</span>
         </li>
@@ -97,7 +107,7 @@
   }
 </style>
 <script>
-  import {mapGetters} from 'vuex'
+  import {mapActions, mapGetters} from 'vuex'
   import * as types from '../../vuex/mutation-types'
   import TimelineDialog from './TimelineDialog'
   const titleMap = {
@@ -125,11 +135,15 @@
         show: false,
         isEdit: false,
         dialogTitle: '',
+        delId: 0,
         timeline: {
-          start_time: '',
+          id: 0,
+          start_time: this.$root.time,
           name: '',
           ds_timeline_id: 0,
           style: {
+            color: '',
+            'background-color': '',
             margin: 0,
             padding: 0
           },
@@ -138,23 +152,55 @@
       }
     },
     methods: {
+      ...mapActions({
+        'delete': types.DELETE_TIMELINE
+      }),
       close () {
         this.show = false
+      },
+      cancel (index) {
+        this.$refs.pop[index].showPopper = false
+      },
+      confirmDel (index) {
+        this.delete({
+          data: {id: this.delId},
+          callback: (data) => {
+            this.$refs.pop[index].showPopper = false
+          }
+        })
       },
       addTimeline () {
         this.dialogTitle = '添加时间线'
         this.show = true
         this.isEdit = false
+        this.timeline.start_time = this.$root.time
+        this.timeline.style.color = ''
+        if (this.$root.buId == 1) {
+          this.timeline.style['background-color'] = '#FFFFFF'
+        } else {
+          this.timeline.style['background-color'] = '#F5F5F5'
+        }
+        this.timeline.style['margin'] = 0
+        this.timeline.style['padding'] = 0
+        this.timeline.name = ''
+        this.timeline.id = 0
         this.timeline.page_module_id = this.module.id
       },
       editTimeline (timeline) {
+        let style = timeline.style
         this.dialogTitle = '编辑时间线'
         this.show = true
         this.isEdit = true
-        this.timeline = timeline
+        this.timeline.style.color = style['color']
+        this.timeline.style['background-color'] = style['background-color']
+        this.timeline.style['margin'] = style['margin']
+        this.timeline.style['padding'] = style['padding']
+        this.timeline.name = timeline.name
+        this.timeline.id = timeline.id
+        this.timeline.page_module_id = this.module.id
       },
       deleteTimeline (timeline) {
-        console.log(timeline)
+        this.delId = timeline.id
       }
     },
     components: {

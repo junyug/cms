@@ -18,6 +18,12 @@ export default {
       commit(types.UPDATE_TIMELINE, {data: res})
       if (payload.callback) payload.callback(res)
     })
+  },
+  [types.DELETE_TIMELINE] ({commit}, payload) {
+    dsTimelineApi.delete(payload.data, (res) => {
+      commit(types.DELETE_TIMELINE, {data: payload.data})
+      if (payload.callback) payload.callback(res)
+    })
   }
 }
 
