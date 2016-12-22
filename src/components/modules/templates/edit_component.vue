@@ -2,7 +2,17 @@
   <div class="edit-component">
     <span class="component-name" v-show="!showForm && module.name">{{module.name}}</span>
     <div v-show="isEdit">
-      <a class="btn-delete" @click="deleteModule"><i class="el-icon-circle-close"></i></a>
+      <el-popover
+        ref="pop"
+        placement="top-end"
+        width="160">
+        <p>确定要删除该模块吗？</p>
+        <div style="text-align: right; margin: 0">
+          <el-button size="mini" type="text" @click.stop="cancelDel">取消</el-button>
+          <el-button type="primary" size="mini" @click.stop="confirmDel">确定</el-button>
+        </div>
+        <a class="btn-delete" slot="reference"><i class="el-icon-circle-close"></i></a>
+      </el-popover>
       <a class="center btn-edit" @click.stop="show">
         <i class="el-icon-edit"></i>
         <span>编辑</span>
@@ -50,6 +60,17 @@
         if (this.showForm) return
         this.showForm = true
       },
+      cancelDel () {
+        this.$refs.pop.showPopper = false
+      },
+      confirmDel () {
+        this.deleteById({
+          data: {id: this.component.id},
+          callback: (data) => {
+            this.$refs.pop.showPopper = false
+          }
+        })
+      },
       cancel () {
         this.showForm = false
       },
@@ -58,14 +79,6 @@
           data: {id: this.component.id, name: this.component.name},
           callback: (data) => {
             this.showForm = false
-          }
-        })
-      },
-      deleteModule () {
-        this.deleteById({
-          data: {id: this.component.id},
-          callback: (data) => {
-            console.log(Object.assign({}, data))
           }
         })
       }

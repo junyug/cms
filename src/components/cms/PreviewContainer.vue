@@ -147,8 +147,27 @@
     computed: {
       ...mapGetters({
         modules: types.MODULE_LIST,
-        applyModules: types.APPLY_MODULE_LIST
+        applyModules: types.APPLY_MODULE_LIST,
+        operateModule: types.OPERATE_MODULE
       })
+    },
+    watch: {
+      applyModules: {
+        handler () {
+          if (this.applyModules.length == 1 && this.applyModules[0].id == -1) {
+            this.showModuleBox()
+          }
+        },
+        deep: true
+      },
+      operateModule: {
+        handler () {
+          if (Object.keys(this.operateModule).length == 0) {
+            this.showModuleBox()
+          }
+        },
+        deep: true
+      }
     },
     methods: {
       ...mapActions({
@@ -159,11 +178,12 @@
         setTimelineList: types.SET_MODULE_TIMELINE_LIST
       }),
       showModuleBox () {
+        this.activeId = 0
         this.$emit('switchBox', {modulesShow: true, timelineShow: false})
       },
       editComponent (module) {
         if (this.activeId == module.id) return
-        if (module.id !== -1) {
+        if (module.id != -1) {
           this.activeId = module.id
           this.setOperateModule({
             data: {id: module.id},

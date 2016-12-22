@@ -22,8 +22,8 @@ export default {
     },
     [types.ADD_MODULE] (state, payload) {
       if (state.applyModuleList.length === 1 && state.applyModuleList[0].id == -1) {
-        state.pageModules.splice(0, 1)
-        state.pageModules.push(payload.data)
+        state.applyModuleList.splice(0, 1)
+        state.applyModuleList.push(payload.data)
       } else {
         state.applyModuleList.splice(payload.index + 1, 0, payload.data)
       }
