@@ -1,7 +1,9 @@
 /**
  * 使用命名空间区分不同模块
  */
-// page types
+/**
+ * page types
+ */
 // set state types
 export const SET_PAGE_LIST = 'page/SET_PAGE_LIST'
 export const SET_CITY_LIST = 'page/SET_CITY_LIST'
@@ -16,7 +18,9 @@ export const CITY_LIST = 'page/CITY_LIST'
 export const TYPE_LIST = 'page/TYPE_LIST'
 export const STRUCT_LIST = 'page/STRUCT_LIST'
 
-// page-module types
+/**
+ * page-module types
+ */
 // set state types
 export const SET_MODULE_LIST = 'page_module/SET_MODULE_LIST'
 export const SET_APPLY_MODULE_LIST = 'page_module/SET_APPLY_MODULE_LIST'
@@ -31,12 +35,30 @@ export const MODULE_LIST = 'page_module/MODULE_LIST'
 export const APPLY_MODULE_LIST = 'page_module/APPLY_MODULE_LIST'
 export const OPERATE_MODULE = 'page_module/OPERATE_MODULE'
 
-// ds-timeline types
+/**
+ * ds-timeline types
+ */
 // set state types
 export const SET_MODULE_TIMELINE_LIST = 'timeline/SET_MODULE_TIMELINE_LIST'
 export const ADD_TIMELINE = 'timeline/ADD_TIMELINE'
 export const UPDATE_TIMELINE = 'timeline/UPDATE_TIMELINE'
 export const DELETE_TIMELINE = 'timeline/DELETE_TIMELINE'
+export const SET_OPERATE_TIMELINE_ID = 'timeline/SET_OPERATE_TIMELINE_ID'
 
 // getters types
 export const MODULE_TIMELINE_LIST = 'timeline/MODULE_TIMELINE_LIST'
+export const OPERATE_TIMELINE_ID = 'timeline/OPERATE_TIMELINE_ID'
+
+/**
+ *  ds-item types
+ */
+// set state types
+export const SET_DS_ITEM_LIST = 'ds_item/SET_DSITEM_LIST'
+export const ADD_ITEM = 'ds_item/ADD_ITEM'
+export const UPDATE_ITEM = 'ds_item/UPDATE_ITEM'
+export const BATCH_UPDATE_ITEM = 'ds_item/BATCH_UPDATE_ITEM'
+export const DELETE_ITEM = 'ds_item/DELETE_ITEM'
+export const BATCH_DELETE_ITEM = 'ds_item/BATCH_DELETE_ITEM'
+
+// getters types
+export const DS_ITEM_LIST = 'ds_item/DSITEM_LIST'

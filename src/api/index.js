@@ -6,8 +6,10 @@
 import pageApi from './pageApi'
 import pageModuleApi from './pageModuleApi'
 import dsTimelineApi from './dsTimelineApi'
+import dsItemApi from './dsItemApi'
 export {
   pageApi,
   pageModuleApi,
-  dsTimelineApi
+  dsTimelineApi,
+  dsItemApi
 }

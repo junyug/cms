@@ -24,6 +24,9 @@ export default {
       commit(types.DELETE_TIMELINE, {data: payload.data})
       if (payload.callback) payload.callback(res)
     })
+  },
+  [types.SET_OPERATE_TIMELINE_ID] ({commit}, payload) {
+    commit(types.SET_OPERATE_TIMELINE_ID, {data: payload.data})
   }
 }
 

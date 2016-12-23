@@ -8,30 +8,12 @@
           <span class="arrow-icon"><i class="el-icon-circle-close"></i></span>
           <span class="timeline-time">新建时间线</span>
         </li>
-        <li class="clearfix timeline-item" v-for="(item, index) of timelineList" :key="index">
-          <span class="arrow-icon"></span>
-          <span  class="timeline-time">
-            {{item.start_time * 1000|date('%Y-%m-%d %T')}}
-            <a title="编辑" @click.stop="editTimeline(item)" class="btn-edit"><i class="el-icon-edit"></i></a>
-            <el-popover
-              ref="pop"
-              placement="top-end"
-              width="160">
-              <p>确定要删除该时间线吗？</p>
-              <div style="text-align: right; margin: 0">
-                <el-button size="mini" type="text" @click.stop="cancel(index)">取消</el-button>
-                <el-button type="primary" size="mini" @click.stop="confirmDel(index)">确定</el-button>
-              </div>
-              <a title="删除" slot="reference" class="btn-delete" @click.stop="deleteTimeline(item)"><i class="el-icon-close"></i></a>
-            </el-popover>
-          </span>
-          <span class="timeline-alias">{{item.name}}</span>
-        </li>
+        <timeline-item :unfoldId="unfoldId" :timeline="item" :key="item.id" v-for="(item, index) of timelineList" @timelineEdit="editTimeline" @setUnfoldId="setUnfoldId"></timeline-item>
       </ul>
     </div>
   </section>
 </template>
-<style lang="scss" scoped>
+<style lang="scss">
   #timeline {
     h3 {
       border-left: solid 5px #20A0FF;
@@ -54,6 +36,12 @@
         border-left: 2px solid #fff;
         font-size: 14px;
         &.new-timeline {
+          position: relative;
+          padding: 10px 15px;
+          border: none;
+          text-align: left;
+          border-left: 2px solid #fff;
+          font-size: 14px;
           color: #ebaeb0;
           .arrow-icon {
             left: -11px;
@@ -110,6 +98,7 @@
   import {mapActions, mapGetters} from 'vuex'
   import * as types from '../../vuex/mutation-types'
   import TimelineDialog from './TimelineDialog'
+  import TimelineItem from './TimelineItem'
   const titleMap = {
     '1': '轮播图',
     '2': '图片',
@@ -136,6 +125,7 @@
         isEdit: false,
         dialogTitle: '',
         delId: 0,
+        unfoldId: 0,
         timeline: {
           id: 0,
           start_time: this.$root.time,
@@ -158,16 +148,8 @@
       close () {
         this.show = false
       },
-      cancel (index) {
-        this.$refs.pop[index].showPopper = false
-      },
-      confirmDel (index) {
-        this.delete({
-          data: {id: this.delId},
-          callback: (data) => {
-            this.$refs.pop[index].showPopper = false
-          }
-        })
+      setUnfoldId (timelineId) {
+        this.unfoldId = timelineId
       },
       addTimeline () {
         this.dialogTitle = '添加时间线'
@@ -199,13 +181,10 @@
         this.timeline.name = timeline.name
         this.timeline.id = timeline.id
         this.timeline.page_module_id = this.module.id
-      },
-      deleteTimeline (timeline) {
-        this.delId = timeline.id
       }
     },
     components: {
-      TimelineDialog
+      TimelineDialog, TimelineItem
     }
   }
 </script>
