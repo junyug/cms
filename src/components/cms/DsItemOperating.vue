@@ -1,7 +1,17 @@
 <template>
   <div class="btn-wrap" v-if="isShow">
-    <el-button type="info" @click.stop="addData">新增数据</el-button>
-    <el-button type="danger" @click.stop="deleteAllDsItemData">删除全部</el-button>
+    <el-button v-if="module.module.ds_type != 1" type="info" @click.stop="addData">新增数据</el-button>
+    <el-popover
+      placement="top"
+      ref="delpop"
+      title="警告">
+      <p>确定删除全部数据？</p>
+      <div style="text-align: right; margin: 0">
+      <el-button size="mini" type="text" @click.stop="cancel">取消</el-button>
+      <el-button type="primary" size="mini" @click.stop="confirmDel">确定</el-button>
+      </div>
+      <el-button slot="reference" type="danger">删除全部</el-button>
+    </el-popover>
     <el-button @click.stop="saveDsTimelineData">保存</el-button>
     <el-button type="success" @click.stop="previewFilter">保存并预览</el-button>
   </div>
@@ -13,14 +23,19 @@
     border: 1px solid #e0e6ed;
     border-top: none;
     padding: 10px;
+    .el-button--success {
+      margin-left: 0;
+    }
   }
 </style>
 <script>
+  import {mapActions, mapGetters} from 'vuex'
+  import * as types from '../../vuex/mutation-types'
+  import {Notification} from 'element-ui'
   import imageHolder from '../../assets/tpl-image/img_1xn.png'
   function InitParam (img, imgUrl, width, height) {
     return {
       'id': 0,
-      'template': 'img',
       'object_img_url': imgUrl || imageHolder,
       'object_img': img || '',
       'img_width': width || '0',
@@ -36,15 +51,25 @@
   }
   export default {
     name: 'dsOperate',
-    props: {
-      isBefore: false,
-      ds_timeline_id: '',
-      sourceData: { }
-    },
     computed: {
+      ...mapGetters({
+        module: types.OPERATE_MODULE,
+        dsItems: types.DS_ITEM_LIST,
+        dsTimelineId: types.OPERATE_TIMELINE_ID
+      }),
       isShow () {
         return !this.isBefore
+      },
+      moduleType () {
+        return this.module.module.type
+      },
+      sourceData () {
+        return this.dsItems
       }
+    },
+    props: {
+      isBefore: false,
+      ds_timeline_id: ''
     },
     data () {
       return {
@@ -52,6 +77,16 @@
       }
     },
     methods: {
+      ...mapActions({
+        setDsItemData: types.BATCH_UPDATE_ITEM,
+        batchDeleteDsItem: types.BATCH_DELETE_ITEM
+      }),
+      cancel () {
+        this.$refs.delpop.showPopper = false
+      },
+      confirmDel () {
+        this.deleteAllDsItemData()
+      },
       previewFilter () {
         this.saveDsTimelineData()
         setTimeout(() => {
@@ -59,13 +94,13 @@
         }, 1000)
       },
       addData () {
-        let managerParent = this.$parent.$parent.$parent.$parent.$parent
+        let managerParent = this.$parent.$parent.$parent.$parent.$parent.$parent
         if (this.moduleType != 5) {
           managerParent.showImageManagerDialog('add', (data) => {
             data.forEach((value, i) => {
               if (this.moduleType == 4) {
                 if (value.width != value.height) {
-                  // Toast.error('ICON尺寸要求长宽比1:1')
+                  Notification.error({title: '提示', message: 'ICON尺寸要求长宽比1:1'})
                 } else {
                   this.sourceData.push(new InitParam(value.name, value.url, value.width, value.height))
                 }
@@ -82,8 +117,12 @@
         this.sourceData = this.sourceData.filter((obj) => {
           return obj !== null
         })
-        let data = {'ds_timeline_id': this.ds_timeline_id, 'item_data': JSON.stringify(this.sourceData)}
-        this.setDsItemData(data, (res) => {
+        let data = {'ds_timeline_id': this.dsTimelineId, 'item_data': JSON.stringify(this.sourceData)}
+        this.setDsItemData({
+          data: data,
+          callback: (res) => {
+            Notification.success({title: '提示', message: '数据保存成功'})
+          }
         })
       },
       deleteAllDsItemData () {
@@ -97,10 +136,13 @@
           }
         })
         let data = {'ids': ids.join(','), 'ds_timeline_id': this.ds_timeline_id}
-        if (window.confirm('确定要删除全部数据？')) {
-          this.batchDeleteDsItem(data, (res) => {
-          })
-        }
+        this.batchDeleteDsItem({
+          data: data,
+          callback: (res) => {
+            Notification.success({title: '提示', message: '数据删除成功'})
+            this.$refs.delpop.showPopper = false
+          }
+        })
       }
     }
   }

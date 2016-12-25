@@ -8,7 +8,7 @@
       </span>
     </el-dialog>
     <el-table :data="dsItems">
-      <el-table-column label="#" type="index"></el-table-column>
+      <el-table-column label="#" type="index" width="50px"></el-table-column>
       <el-table-column width="168px" label="图片" inline-template>
         <img :src="row.object_img_url" @click="$parent.editImg(row)">
       </el-table-column>
@@ -24,7 +24,7 @@
         </span>
       </el-table-column>
       <el-table-column v-if="!$parent.isBefore" width="100px" align="center" label="删除" inline-template>
-        <a class="delete-item" @click.stop="dsDel(row)"><i class="el-icon-delete"></i></a>
+        <a class="delete-item" @click.stop="dsDel($index, row)"><i class="el-icon-delete"></i></a>
       </el-table-column>
     </el-table>
     <ds-operate :isBefore="$parent.isBefore"></ds-operate>
@@ -33,6 +33,7 @@
 <script>
   import {mapActions, mapGetters} from 'vuex'
   import * as types from '../../../vuex/mutation-types'
+  import {Notification} from 'element-ui'
   import userSelect from '../../common/userSelect'
   import DsOperate from '../../cms/DsItemOperating'
   export default {
@@ -61,14 +62,19 @@
       ...mapActions({
         'delete': types.DELETE_ITEM
       }),
-      dsDel (ds) {
-        this.dsId = ds.id
-        this.dialogVisible = true
+      dsDel (index, ds) {
+        if (ds.id == 0) {
+          this.dsItems.splice(index, 1)
+        } else {
+          this.dsId = ds.id
+          this.dialogVisible = true
+        }
       },
       confirmDel (row) {
         this.delete({
           data: {id: this.dsId, ds_timeline_id: this.timelineId},
           callback: (data) => {
+            Notification.success({title: '提示', message: '数据删除成功'})
             this.dialogVisible = false
           }
         })

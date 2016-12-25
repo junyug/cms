@@ -124,10 +124,12 @@
         }
       },
       editImg (ds) {
-        console.log(ds)
+        let managerParent = this.$parent.$parent.$parent.$parent
+        managerParent.editImg(ds)
       },
       selectUrl (ds) {
-        console.log(ds)
+        let managerParent = this.$parent.$parent.$parent.$parent
+        managerParent.showUrlDialog(ds)
       },
       unfold () {
         if (this.unfoldId != this.item.id) {
