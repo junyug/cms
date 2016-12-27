@@ -1,6 +1,7 @@
 <template>
   <section id="pageedit">
-    <image-manager v-if="timelineShow && showImageManager" :show-modal="showImageManager" :callback="callback" @closeImgManager="closeImgManager" :operate="operate"></image-manager>
+    <image-manager v-if="timelineShow && showImageManager" :showModal="showImageManager" :callback="callback" @closeImgManager="closeImgManager" :operate="operate"></image-manager>
+    <url-dialog v-if="timelineShow && showUrl" :dsItem="dsItem" :showModal="showUrl" @closeUrlDialog="closeUrlDialog"></url-dialog>
     <el-row type="flex" justify="center" align="top">
       <el-col class="wrap-container">
         <section class="preview-box">
@@ -8,9 +9,9 @@
         </section>
       </el-col>
       <el-col class="bg-purple">
-        <section :class="{'main-editor-box':1, 'main-box-fixed': isFixed}">
+        <section :class="['main-editor-box', {'main-box-fixed': isFixed}]">
           <module-list v-if="modulesShow"></module-list>
-          <timeline-edit v-if="timelineShow"></timeline-edit>
+          <timeline-edit v-if="timelineShow" :isFixed="isFixed"></timeline-edit>
         </section>
       </el-col>
     </el-row>
@@ -25,8 +26,16 @@
       background: #e5e9f2;
     }
     .main-editor-box {
+      background: #e5e9f2;
       box-sizing: border-box;
       margin: 0 10px;
+      &.main-box-fixed {
+        position: fixed;
+        top: 0;
+        left: 320px;
+        padding-left: 10px;
+        overflow: auto;
+      }
     }
   }
 </style>
@@ -35,10 +44,14 @@
   import ModuleList from './ModuleList'
   import TimelineEdit from './TimelineEdit'
   import ImageManager from '../common/ImageManager'
+  import UrlDialog from '../common/UrlDialog'
   export default {
     name: 'pageEdit',
     data () {
       return {
+        bodyEl: '',
+        pageEl: '',
+        fixEl: '',
         isFixed: false,
         modulesShow: true,
         timelineShow: false,
@@ -46,7 +59,8 @@
         showUrl: false,
         operate: 'add',
         callback: () => {},
-        dsItem: {}
+        dsItem: {},
+        ticking: false  // rAF 触发锁
       }
     },
     methods: {
@@ -78,10 +92,44 @@
       },
       closeImgManager () {
         this.showImageManager = false
+      },
+      closeUrlDialog () {
+        this.showUrl = false
+      },
+      onScroll () {
+        if (!this.ticking) {
+          window.requestAnimationFrame(() => {
+            this.fixedFunc()
+            this.ticking = false
+          })
+          this.ticking = true
+        }
+      },
+      fixedFunc () {
+        let scrollTop = this.bodyEl.scrollTop
+        let docH = document.documentElement.clientHeight
+        let pageH = this.pageEl.offsetHeight
+        if (scrollTop > 50) {
+          this.fixEl.style.height = docH - 20 + 'px'
+          this.isFixed = true
+          if (pageH <= docH) {
+            this.pageEl.style.height = docH + 60 + 'px'
+            this.bodyEl.scrollTop = 52
+          }
+        } else {
+          this.isFixed = false
+        }
       }
     },
     components: {
-      PreviewContainer, ModuleList, TimelineEdit, ImageManager
+      PreviewContainer, ModuleList, TimelineEdit,
+      ImageManager, UrlDialog
+    },
+    mounted () {
+      this.bodyEl = document.querySelector('body')
+      this.pageEl = document.querySelector('#pageedit')
+      this.fixEl = document.querySelector('.main-editor-box')
+      window.addEventListener('scroll', this.onScroll, false)
     }
   }
 </script>

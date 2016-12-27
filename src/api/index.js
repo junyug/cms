@@ -8,11 +8,12 @@ import pageModuleApi from './pageModuleApi'
 import dsTimelineApi from './dsTimelineApi'
 import dsItemApi from './dsItemApi'
 import imageApi from './imageApi'
+import goodsApi from './goodsApi'
 export {
   pageApi,
   pageModuleApi,
   dsTimelineApi,
   dsItemApi,
-  imageApi
-
+  imageApi,
+  goodsApi
 }

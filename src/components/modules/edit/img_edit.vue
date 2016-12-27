@@ -12,11 +12,17 @@
       <el-table-column width="168px" label="图片" inline-template>
         <img :src="row.object_img_url" @click="$parent.editImg(row)">
       </el-table-column>
-      <el-table-column label="名称" inline-template>
-        <el-input placeholder="图片名称" :value="row.object_name"></el-input>
+      <el-table-column v-if="templateCode != 'icon_1x4'" label="名称" inline-template>
+        <el-input placeholder="图片名称" v-model="row.object_name"></el-input>
+      </el-table-column>
+      <el-table-column v-if="templateCode == 'icon_1x4'" label="ICON名称" inline-template>
+        <el-input placeholder="ICON名称" v-model="row.object_name"></el-input>
+      </el-table-column>
+      <el-table-column v-if="templateCode == 'icon_1x4'" label="角标" inline-template>
+        <el-input placeholder="角标" v-model="row.icon_text"></el-input>
       </el-table-column>
       <el-table-column label="链接到" inline-template>
-        <span class="url-text" @click.stop="$parent.selectUrl(row)">{{$parent.urlText(row)}}</span>
+        <span class="url-text" @click.stop="$parent.selectUrl(row)" v-html="$parent.urlText(row)"></span>
       </el-table-column>
       <el-table-column :context="_self" label="筛选条件" v-if="$root.buId == 1" inline-template>
         <span @click.stop="setCurrent($index)">
@@ -49,6 +55,9 @@
       }),
       dsItems () {
         return this.items
+      },
+      templateCode () {
+        return this.module.module.template_code
       }
     },
     data () {

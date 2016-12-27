@@ -38,6 +38,18 @@ module.exports = {
       '/ds-item': {
         target: host,
         changeOrigin: true
+      },
+      '/img-material': {
+        target: host,
+        changeOrigin: true
+      },
+      '/gis': {
+        target: host,
+        changeOrigin: true
+      },
+      '/goods': {
+        target: host,
+        changeOrigin: true
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"

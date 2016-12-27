@@ -1,101 +1,98 @@
 <template>
-  <el-dialog :title="title" v-model="isShow" @close="hide">
-    <div class="dialog-header clearfix">
-      <div class="module-title">
-      <ul class="nav nav-tabs" id="myTab">
-        <li :class="{'active': active == 1}" @click="changeTab(1)">我的图片库</li>
-        <li :class="{'active': active == 0}"  @click="changeTab(0)">所有图片</li>
-        <li :class="{'active': active == 2}"  @click="changeTab(2)">上传新图片</li>
-        <li class="slt-tip" v-if="selected.length > 0">您已选择<span>{{selected.length}}</span>个图片</li>
-      </ul>
-    </div>
-    </div>
-    <div class="dialog-content">
-      <div class="tab-content">
-        <div v-if="loading" class="loading-mask"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
-        <div :class="['tab-pane', {'active': active == 1}]">
-          <div class="search-bar">
-            <div class="search-box-wrapper">
-              <el-input size='small' placeholder="搜索页面" icon="search" v-model.lazy="params.name"></el-input>
+  <el-dialog class="image-manager-box" :title="title" v-model="isShow" @close="hide">
+    <el-tabs :active-name="active.toString()" @tab-click="changeTab">
+      <el-tab-pane name="1" label="我的图片">
+        <div class="tab-content">
+          <div v-if="loading" class="loading-mask"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
+          <div :class="['tab-pane', 'active']">
+            <div class="search-bar">
+              <div class="search-box-wrapper">
+                <el-input size='small' placeholder="搜索页面" icon="search" v-model.lazy="params.name"></el-input>
+              </div>
             </div>
-          </div>
-          <div v-if="hasMyFiles()" v-for="(value, key) in myfiles">
-            <div class="image-day-header"><span>{{key}}</span></div>
-            <div class="image-list">
-              <div v-for="item in value" :class="['image-item', {'selected': hasInSelected(item)}]" @click="toggleFileStatus(item)">
-                <div class="img-wrapper">
-                  <img :src="item.img_url">
-                </div>
-                <div class="img-name">
-                  <span>{{item.name}}</span>
-                </div>
-                <div class="img-meta">
-                  <span>{{item.width}} * {{item.height}}</span>
+            <div v-if="hasMyFiles()" v-for="(value, key) in myfiles">
+              <div class="image-day-header"><span>{{key}}</span></div>
+              <div class="image-list">
+                <div v-for="item in value" :class="['image-item', {'selected': hasInSelected(item)}]" @click="toggleFileStatus(item)">
+                  <div class="img-wrapper">
+                    <img :src="item.img_url">
+                  </div>
+                  <div class="img-name">
+                    <span>{{item.name}}</span>
+                  </div>
+                  <div class="img-meta">
+                    <span>{{item.width}} * {{item.height}}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div v-if="!hasMyFiles()" class="no-tip">
-            暂无图片上传!
+            <div v-if="!hasMyFiles()" class="no-tip">暂无图片上传!</div>
           </div>
         </div>
-        <div :class="['tab-pane', {'active': active == 0}]">
-          <div class='search-bar'>
-            <div class='search-box-wrapper'>
-              <el-input size='small' placeholder="搜索页面" icon="search" v-model.lazy="params.name"></el-input>
+      </el-tab-pane>
+      <el-tab-pane name="0" label="所有图片">
+        <div class="tab-content">
+          <div v-if="loading" class="loading-mask"><i class="fa fa-spinner fa-pulse fa-fw"></i></div>
+          <div :class="['tab-pane', 'active']">
+            <div class='search-bar'>
+              <div class='search-box-wrapper'>
+                <el-input size='small' placeholder="搜索页面" icon="search" v-model.lazy="params.name"></el-input>
+              </div>
             </div>
-          </div>
-          <div  v-if='hasAllFiles()'  v-for="(value, key) in allfiles">
-            <div class='image-day-header'><span>{{key}}</span></div>
-            <div class='image-list'>
-              <div v-for='item in value' :class="['image-item', {'selected': hasInSelected(item)}]" @click='toggleFileStatus(item)'>
-                <div class='img-wrapper'>
-                  <img :src='item.img_url'>
-                </div>
-                <div class='img-name'>
-                  <span>{{item.name}}</span>
-                </div>
-                <div class='img-meta'>
-                  <span>{{item.width}} * {{item.height}}</span>
+            <div  v-if='hasAllFiles()'  v-for="(value, key) in allfiles">
+              <div class='image-day-header'><span>{{key}}</span></div>
+              <div class='image-list'>
+                <div v-for='item in value' :class="['image-item', {'selected': hasInSelected(item)}]" @click='toggleFileStatus(item)'>
+                  <div class='img-wrapper'>
+                    <img :src='item.img_url'>
+                  </div>
+                  <div class='img-name'>
+                    <span>{{item.name}}</span>
+                  </div>
+                  <div class='img-meta'>
+                    <span>{{item.width}} * {{item.height}}</span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div v-if='!hasAllFiles()' class='no-tip'>
-            暂无图片 :(
+            <div v-if='!hasAllFiles()' class='no-tip'>暂无图片 :(</div>
           </div>
         </div>
-        <div :class="['tab-pane', {'active': active == 2}]">
-          <ol class='upload-status'>
-            <li v-for='uploadFile in uploadFiles' @click='toggleFileStatus(uploadFile)'>
-              <span class='f-chk'>
-                <i v-if='uploadFile.id && hasInSelected(uploadFile)' class='fa fa-check-square-o' aria-hidden='true'></i>
-                <i v-if='uploadFile.id && !hasInSelected(uploadFile)' class='fa fa-square-o' aria-hidden='true'></i>
-                <i v-if='!uploadFile.id' class='fa fa-warning' aria-hidden='true'></i>
-              </span>
-              <span class='f-name'>{{ uploadFile.name }}</span>
-              <span class='f-type'>{{ uploadFile.type }}</span>
-              <span class='f-size'>{{ uploadFile.size }}</span>
-              <span class='f-status'>
-                <i v-if="uploadFile.status=='loading'" class='fa fa-spinner fa-pulse fa-fw'></i>
-                <i v-if="uploadFile.status=='success'" class='fa fa-check' style='color:#7caede' aria-hidden='true'></i>
-                <i v-if="uploadFile.status=='failed'" class='fa fa-times' style='color:#f39999' aria-hidden='true'></i>
-              </span>
-              <span class='f-url'><img :src='uploadFile.url' /></span>
-              <span class='f-error'>{{ uploadFile.error }}</span>
-            </li>
-          </ol>
-          <div v-if='uploadFiles.length == 0'>
-            <br/><br/><br/><br/><br/>
-            <div class='upload-pane' @click='selectFiles'>
-              <i class='fa fa-upload'></i>
-              <div class='tip'>将文件拖放到此处，或<button>点击上传</button></div>
+      </el-tab-pane>
+      <el-tab-pane name="2" label="上传新图片">
+        <div class="tab-content">
+          <div :class="['tab-pane', 'active']">
+            <ol class='upload-status'>
+              <li v-for='uploadFile in uploadFiles' @click='toggleFileStatus(uploadFile)'>
+                <span class='f-chk'>
+                  <i v-if='uploadFile.id && hasInSelected(uploadFile)' class='fa fa-check-square-o' aria-hidden='true'></i>
+                  <i v-if='uploadFile.id && !hasInSelected(uploadFile)' class='fa fa-square-o' aria-hidden='true'></i>
+                  <i v-if='!uploadFile.id' class='fa fa-warning' aria-hidden='true'></i>
+                </span>
+                <span class='f-name'>{{ uploadFile.name }}</span>
+                <span class='f-type'>{{ uploadFile.type }}</span>
+                <span class='f-size'>{{ uploadFile.size }}</span>
+                <span class='f-status'>
+                  <i v-if="uploadFile.status=='loading'" class='fa fa-spinner fa-pulse fa-fw'></i>
+                  <i v-if="uploadFile.status=='success'" class='fa fa-check' style='color:#7caede' aria-hidden='true'></i>
+                  <i v-if="uploadFile.status=='failed'" class='fa fa-times' style='color:#f39999' aria-hidden='true'></i>
+                </span>
+                <span class='f-url'><img :src='uploadFile.url' /></span>
+                <span class='f-error'>{{ uploadFile.error }}</span>
+              </li>
+            </ol>
+            <div v-if='uploadFiles.length == 0'>
+              <br/><br/><br/><br/><br/>
+              <div class='upload-pane' @click='selectFiles'>
+                <i class='fa fa-upload'></i>
+                <div class='tip'>将文件拖放到此处，或<button>点击上传</button></div>
+              </div>
+              <div class='upload-tip'>只能上传 jpg/png 文件，且不超过100kb</div>
             </div>
-            <div class='upload-tip'>只能上传 jpg/png 文件，且不超过100kb</div>
           </div>
         </div>
-      </div>
-    </div>
+      </el-tab-pane>
+    </el-tabs>
     <div class='clearfix footer'>
       <div class='img-dialog-pager' v-if='active != 2'>
         <el-pagination v-show='totalPage > 0' class="pagination"
@@ -144,11 +141,13 @@
   }
 </style>
 <style lang="scss">
-  .el-dialog--small {
-    width: 70%;
-  }
-  .el-dialog__body {
-    padding-top: 10px;
+  .image-manager-box {
+    .el-dialog__body {
+      padding-top: 10px;
+    }
+    .el-tabs {
+      width: 100%;
+    }
   }
   .no-tip{
     text-align: center;
@@ -370,22 +369,6 @@
     line-height: 14px;
     padding: 10px;
   }
-  $c_white: #ffffff;
-  $c_gray: #4A4A4A;
-  .dialog-header {
-    display: -webkit-flex;
-    display: flex;
-    -webkit-align-items: center;
-    align-items: center;
-    font-size: 14px;
-    color: $c_gray;
-    h4 {
-      font-size: 14px;
-      color: $c_gray;
-      flex: 1;
-      text-align: left;
-    }
-  }
   .upload-status{
     padding: 0px;
     margin: 0;
@@ -594,9 +577,11 @@
         this.uploadFiles = []
         this.$emit('closeImgManager', false)
       },
-      changeTab (index) {
+      changeTab (tab) {
+        let index = tab.name
         this.active = this.params.is_my = index
         this.params.page = 1
+        this.uploadFiles = []
       },
       submit () {
         this.success(this.selected.map((file) => {
@@ -651,7 +636,6 @@
             self.uploadFiles = tmpFiles
           }
           if (res) {
-            res = JSON.parse(res)
             if (res.data) {
               if (res.data.success && res.data.success.length) {
                 updateStatus(res.data.success, 'success')

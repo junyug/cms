@@ -19,6 +19,8 @@
     <span class="timeline-alias">{{item.name}}</span>
     <div class="clearfix ds-item-box">
       <img-edit :isUnfold="isUnfold" v-if="module.module.ds_type == 2"></img-edit>
+      <text-edit :isUnfold="isUnfold" v-if="module.module.ds_type == 3"></text-edit>
+      <goods-edit :isUnfold="isUnfold" v-if="module.module.ds_type == 1"></goods-edit>
     </div>
   </li>
 </template>
@@ -65,6 +67,9 @@
         padding: 5px 0;
         vertical-align: middle;
       }
+      input {
+        margin: 5px 0;
+      }
       .url-text {
         color: #20a0ff;
         cursor: pointer;
@@ -79,6 +84,8 @@
   import {mapActions, mapGetters} from 'vuex'
   import * as types from '../../vuex/mutation-types'
   import ImgEdit from '../modules/edit/img_edit'
+  import TextEdit from '../modules/edit/text_edit'
+  import GoodsEdit from '../modules/edit/goods_edit'
   export default {
     name: 'timelineItem',
     props: {
@@ -118,17 +125,17 @@
         if (row.url_name) {
           return row.url_name
         } else if (row.h5_url) {
-          return row.h5_url + ' ' + row.app_url
+          return row.h5_url + '<br>' + row.app_url
         } else {
           return '无链接'
         }
       },
       editImg (ds) {
-        let managerParent = this.$parent.$parent.$parent.$parent
+        let managerParent = this.$parent.$parent.$parent.$parent.$parent.$parent
         managerParent.editImg(ds)
       },
       selectUrl (ds) {
-        let managerParent = this.$parent.$parent.$parent.$parent
+        let managerParent = this.$parent.$parent.$parent.$parent.$parent.$parent
         managerParent.showUrlDialog(ds)
       },
       unfold () {
@@ -158,7 +165,7 @@
       }
     },
     components: {
-      ImgEdit
+      ImgEdit, TextEdit, GoodsEdit
     },
     mounted () {
       if (this.item.start_time * 1000 <= Date.now() && Date.now() <= this.item.end_time * 1000) {

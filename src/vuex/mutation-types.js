@@ -2,6 +2,20 @@
  * 使用命名空间区分不同模块
  */
 /**
+ * root state
+ */
+// set state types
+export const SET_SALE_AREA_LIST = 'SET_SALE_AREA_LIST'
+export const SET_CLASS1_LIST = 'SET_CLASS1_LIST'
+export const SET_CLASS2_LIST = 'SET_CLASS2_LIST'
+export const SEARCH_GOOD = 'SEARCH_GOOD'
+
+// getters types
+export const SALE_AREA_LIST = 'SALE_AREA_LIST'
+export const CLASS1_LIST = 'CLASS1_LIST'
+export const CLASS2_LIST = 'CLASS2_LIST'
+
+/**
  * page types
  */
 // set state types
@@ -62,3 +76,12 @@ export const BATCH_DELETE_ITEM = 'ds_item/BATCH_DELETE_ITEM'
 
 // getters types
 export const DS_ITEM_LIST = 'ds_item/DSITEM_LIST'
+
+/**
+ * goods types
+ */
+// set state types
+export const SET_GOOD_LIST = 'goods/SET_GOOD_LIST'
+
+// getters types
+export const GOOD_LIST = 'goods/GOOD_LIST'

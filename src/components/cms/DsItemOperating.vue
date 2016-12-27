@@ -32,11 +32,10 @@
   import {mapActions, mapGetters} from 'vuex'
   import * as types from '../../vuex/mutation-types'
   import {Notification} from 'element-ui'
-  import imageHolder from '../../assets/tpl-image/img_1xn.png'
   function InitParam (img, imgUrl, width, height) {
     return {
       'id': 0,
-      'object_img_url': imgUrl || imageHolder,
+      'object_img_url': imgUrl || '',
       'object_img': img || '',
       'img_width': width || '0',
       'img_height': height || '0',
@@ -94,7 +93,7 @@
         }, 1000)
       },
       addData () {
-        let managerParent = this.$parent.$parent.$parent.$parent.$parent.$parent
+        let managerParent = this.$parent.$parent.$parent.$parent.$parent.$parent.$parent.$parent
         if (this.moduleType != 5) {
           managerParent.showImageManagerDialog('add', (data) => {
             data.forEach((value, i) => {

@@ -1,15 +1,22 @@
 <template>
   <section id="timeline">
     <timeline-dialog :show-edit="show" :title="dialogTitle" :is-edit="isEdit" :params="timeline" @close="close"></timeline-dialog>
-    <h3 class="component-title">{{title}}</h3>
     <div class="timeline-list-box">
-      <ul class="timeline-list">
-        <li class="clearfix timeline-item new-timeline" @click.stop="addTimeline">
-          <span class="arrow-icon"><i class="el-icon-circle-close"></i></span>
-          <span class="timeline-time">新建时间线</span>
-        </li>
-        <timeline-item :unfoldId="unfoldId" :timeline="item" :key="item.id" v-for="(item, index) of timelineList" @timelineEdit="editTimeline" @setUnfoldId="setUnfoldId"></timeline-item>
-      </ul>
+      <el-row type="flex" align="top">
+        <el-col class="edit-box">
+          <h3 class="component-title">{{title}}</h3>
+          <ul class="timeline-list">
+            <li class="clearfix timeline-item new-timeline">
+              <span class="arrow-icon" @click.stop="addTimeline"><i class="el-icon-circle-close"></i></span>
+              <span @click.stop="addTimeline" class="timeline-time">新建时间线</span>
+            </li>
+            <timeline-item :unfoldId="unfoldId" :timeline="item" :key="item.id" v-for="(item, index) of timelineList" @timelineEdit="editTimeline" @setUnfoldId="setUnfoldId"></timeline-item>
+          </ul>
+        </el-col>
+        <el-col v-if="goodsFilter" :class="['goods-filter-box', {'filter-fixed': isFixed}]">
+          <goods-selector></goods-selector>
+        </el-col>
+      </el-row>
     </div>
   </section>
 </template>
@@ -23,6 +30,17 @@
       color: #20A0FF;
     }
     .timeline-list-box {
+      .edit-box {
+        flex: 1;
+      }
+      .goods-filter-box {
+        width: 250px;
+        &.filter-fixed {
+          position: fixed;
+          top: 0;
+          right: 5px;
+        }
+      }
       .timeline-list {
         list-style-type: none;
         margin: 0;
@@ -99,6 +117,7 @@
   import * as types from '../../vuex/mutation-types'
   import TimelineDialog from './TimelineDialog'
   import TimelineItem from './TimelineItem'
+  import GoodsSelector from './GoodsSelector'
   const titleMap = {
     '1': '轮播图',
     '2': '图片',
@@ -110,6 +129,9 @@
   }
   export default {
     name: 'timelineEdit',
+    props: {
+      isFixed: false
+    },
     computed: {
       ...mapGetters({
         module: types.OPERATE_MODULE,
@@ -117,6 +139,9 @@
       }),
       title () {
         return titleMap[this.module.module.type] || '图片'
+      },
+      goodsFilter () {
+        return this.module.module.ds_type == 1 && this.unfoldId != 0
       }
     },
     data () {
@@ -184,7 +209,7 @@
       }
     },
     components: {
-      TimelineDialog, TimelineItem
+      TimelineDialog, TimelineItem, GoodsSelector
     }
   }
 </script>
