@@ -38,7 +38,7 @@
         &.filter-fixed {
           position: fixed;
           top: 0;
-          right: 5px;
+          right: 11px;
         }
       }
       .timeline-list {
@@ -164,6 +164,14 @@
           },
           page_module_id: ''
         }
+      }
+    },
+    watch: {
+      module: {
+        handler () {
+          document.querySelector('body').scrollTop = 0
+        },
+        deep: true
       }
     },
     methods: {

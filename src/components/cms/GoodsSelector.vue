@@ -10,7 +10,7 @@
     <el-select class="inline-item" v-model="class2Id">
       <el-option v-for="item of class2List" :label="item.name" :value="item.id"></el-option>
     </el-select>
-    <div class="goods-list-box">
+    <div class="goods-list-box" v-show="showGoods">
       <div class="no-goods-tip" v-show="!goods.length">无商品数据</div>
       <div v-if="showGoods" v-for="good in goods" :good="good" :class="['good-select-item',{'selected': good.selected}]" @click="toggle(good)">
         <div class="clearfix">
@@ -169,7 +169,9 @@
       showGoods () {
         if (this.showGoods) {
           let goodsBox = document.querySelector('.goods-list-box')
+          let editBox = document.querySelector('.main-editor-box')
           goodsBox.style.height = document.documentElement.clientHeight - 120 + 'px'
+          editBox.style.right = '250px'
         }
       },
       name () {

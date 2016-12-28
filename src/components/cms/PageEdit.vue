@@ -40,6 +40,8 @@
   }
 </style>
 <script>
+  import {mapGetters} from 'vuex'
+  import * as types from '../../vuex/mutation-types'
   import PreviewContainer from './PreviewContainer'
   import ModuleList from './ModuleList'
   import TimelineEdit from './TimelineEdit'
@@ -47,6 +49,12 @@
   import UrlDialog from '../common/UrlDialog'
   export default {
     name: 'pageEdit',
+    computed: {
+      ...mapGetters({
+        module: types.OPERATE_MODULE,
+        timelineId: types.OPERATE_TIMELINE_ID
+      })
+    },
     data () {
       return {
         bodyEl: '',
@@ -63,10 +71,27 @@
         ticking: false  // rAF 触发锁
       }
     },
+    watch: {
+      isFixed () {
+        this.setFixedRight()
+      }
+    },
     methods: {
       switchBox (value) {
         this.modulesShow = value.modulesShow
         this.timelineShow = value.timelineShow
+      },
+      setFixedRight () {
+        if (!this.isFixed) {
+          this.fixEl.style.right = '0'
+          return
+        }
+          // 浮动时，如果是时间线模式并且是商品模块并且时间线展开，则改变右浮动距离，防止样式错乱
+        if (this.timelineShow && this.module.hasOwnProperty('module') && this.module.module.ds_type == 1 && this.timelineId != 0) {
+          this.fixEl.style.right = '250px'
+        } else {
+          this.fixEl.style.right = '0'
+        }
       },
       showUrlDialog (data) {
         this.showUrl = true
