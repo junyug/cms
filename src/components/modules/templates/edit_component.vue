@@ -18,7 +18,7 @@
         <span>编辑</span>
       </a>
       <div class="edit-component-box" v-show="isEdit && showForm">
-        <el-form :inline="true" :model="component">
+        <el-form v-if="moduleType != 7" :inline="true" :model="component">
           <el-form-item>
             <el-input size="small" v-model="component.name" placeholder="模块名称"></el-input>
             <el-button size="small" type="primary" @click.stop="submit">确定</el-button>
@@ -42,6 +42,9 @@
     computed: {
       component () {
         return Object.assign({}, this.module)
+      },
+      moduleType () {
+        return this.module.module.type
       }
     },
     watch: {
@@ -57,8 +60,12 @@
         deleteById: types.DELETE_MODULE
       }),
       show () {
-        if (this.showForm) return
-        this.showForm = true
+        if (this.moduleType == 7) {
+          this.$parent.$parent.showGroupDialog()
+        } else {
+          if (this.showForm) return
+          this.showForm = true
+        }
       },
       cancelDel () {
         this.$refs.pop.showPopper = false

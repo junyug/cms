@@ -1,5 +1,6 @@
 <template>
- <div class="wrapper">
+  <div class="wrapper">
+    <edit-group-component ref="editGroupComponent" :show="showDialog" v-if="showDialog" @closeGroupDialog="closeDialog"></edit-group-component>
     <div class="preview-container" >
       <div class="components-box">
         <div :class="['component-item-box', {'edit': activeId == module.id}]"
@@ -137,11 +138,13 @@
   import Popup from '../modules/templates/popup'
   import GroupTab1xn from '../modules/templates/group_tab_1xn'
   import GroupSeckill1xn from '../modules/templates/group_seckill_1xn'
+  import EditGroupComponent from '../modules/templates/edit_group_tab_component'
   export default {
     name: 'previewContainer',
     data () {
       return {
-        activeId: 0
+        activeId: 0,
+        showDialog: false
       }
     },
     computed: {
@@ -177,6 +180,12 @@
         setOperateModule: types.SET_OPERATE_MODULE,
         setTimelineList: types.SET_MODULE_TIMELINE_LIST
       }),
+      showGroupDialog () {
+        this.showDialog = true
+      },
+      closeDialog () {
+        this.showDialog = false
+      },
       showModuleBox () {
         this.activeId = 0
         this.$emit('switchBox', {modulesShow: true, timelineShow: false})
@@ -243,7 +252,7 @@
       Img1xn, Img2xn, Img3xn, Img2xnx1, Img1xnx3,
       Good1xn, Good2xn, Good3xn,
       Txt, TextTitle1,
-      GroupTab1xn, GroupSeckill1xn
+      GroupTab1xn, GroupSeckill1xn, EditGroupComponent
     },
     created () {
       let pageId = this.$route.params.id
