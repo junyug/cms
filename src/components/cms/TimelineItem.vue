@@ -140,13 +140,13 @@
       },
       unfold () {
         if (this.unfoldId != this.item.id) {
-          this.$emit('setUnfoldId', this.item.id)
-          this.setDsItemList({data: this.dsItems})
           this.setTimelineId({data: {id: this.item.id}})
+          this.setDsItemList({data: this.dsItems})
+          this.$emit('setUnfoldId', this.item.id)
         } else {
-          this.$emit('setUnfoldId', 0)
-          this.setDsItemList({data: []})
           this.setTimelineId({data: {id: 0}})
+          this.setDsItemList({data: []})
+          this.$emit('setUnfoldId', 0)
         }
       },
       cancel () {
