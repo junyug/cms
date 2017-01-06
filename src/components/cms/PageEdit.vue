@@ -10,6 +10,7 @@
       </el-col>
       <el-col class="bg-purple">
         <section :class="['main-editor-box', {'main-box-fixed': isFixed}]">
+          <timeline-view></timeline-view>
           <module-list v-if="modulesShow"></module-list>
           <timeline-edit v-if="timelineShow" :isFixed="isFixed"></timeline-edit>
         </section>
@@ -45,6 +46,7 @@
   import PreviewContainer from './PreviewContainer'
   import ModuleList from './ModuleList'
   import TimelineEdit from './TimelineEdit'
+  import TimelineView from './TimelineView'
   import ImageManager from '../common/ImageManager'
   import UrlDialog from '../common/UrlDialog'
   export default {
@@ -149,7 +151,7 @@
       }
     },
     components: {
-      PreviewContainer, ModuleList, TimelineEdit,
+      PreviewContainer, ModuleList, TimelineEdit, TimelineView,
       ImageManager, UrlDialog
     },
     mounted () {
