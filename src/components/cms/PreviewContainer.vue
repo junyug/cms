@@ -178,7 +178,8 @@
         sortModuleList: types.SORT_MODULES,
         addModule: types.ADD_MODULE,
         setOperateModule: types.SET_OPERATE_MODULE,
-        setTimelineList: types.SET_MODULE_TIMELINE_LIST
+        setTimelineList: types.SET_MODULE_TIMELINE_LIST,
+        setTimelineId: types.SET_OPERATE_TIMELINE_ID
       }),
       showGroupDialog () {
         this.showDialog = true
@@ -197,7 +198,10 @@
           this.setOperateModule({
             data: {id: module.id},
             callback: (data) => {
+              // 填充组件模块时间线信息
               this.setModuleData(data.id)
+              // 切换组件时，重置时间线ID
+              this.setTimelineId({data: {id: 0}})
             }
           })
         }
