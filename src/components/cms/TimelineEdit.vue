@@ -135,13 +135,15 @@
     computed: {
       ...mapGetters({
         module: types.OPERATE_MODULE,
-        timelineList: types.MODULE_TIMELINE_LIST
+        timelineList: types.MODULE_TIMELINE_LIST,
+        timelineId: types.OPERATE_TIMELINE_ID
       }),
       title () {
         return titleMap[this.module.module.type] || '图片'
       },
+      // 如果是商品组件且有时间线，并且时间线展开则展示选择商品模块
       goodsFilter () {
-        return this.module.module.ds_type == 1 && this.unfoldId != 0
+        return this.module.module.ds_type == 1 && this.timelineId != 0 && this.unfoldId != 0
       }
     },
     data () {

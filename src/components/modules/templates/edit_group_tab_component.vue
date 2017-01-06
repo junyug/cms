@@ -1,84 +1,102 @@
 <template>
   <div class="clearfix">
-    <el-dialog v-model="showDialog" :title="dialogTitle" @close="closeDialog">
-      <div slot="header" class="header-box clearfix">
-        <h4 class="module-title">模块信息</h4>
-        <button type="button" class="close" aria-label="Close" @click.stop="hideDialog"><span aria-hidden="true">&times;</span></button>
-      </div>
-      <div slot="body">
-        <div class="form-horizontal">
-          <div class="form-group">
-            <div class="col-sm-12">
-              <input class="form-control" placeholder="模块名称" name="name" type="input" v-model="module.name">
+    <el-dialog v-model="showDialog" :title="dialogTitle" @close="closeDialog" :close-on-click-modal="false">
+      <div><el-input placeholder="模块名称" v-model="module.name"></el-input></div>
+      <div class="tab-setting-box" v-if="module.module.template_code == 'group_tab_1xn'">
+        <h4 class="module-title">页签设置</h4>
+        <el-table :data="tabList">
+          <el-table-column width="80" label="排序" inline-template>
+            <span><el-input :value="$index + 1" @keyup.native.13="changeSort(tabList,$index,$event)"></el-input></span>
+          </el-table-column>
+          <el-table-column label="页签名称" inline-template>
+            <span><el-input v-model="row.name"></el-input></span>
+          </el-table-column>
+          <el-table-column label="描述" inline-template>
+            <span><el-input v-model="row.desc"></el-input></span>
+          </el-table-column>
+          <el-table-column width="80" align="center" inline-template>
+            <div>
+              <el-button v-if="row.group_id != 0" type="text" @click="switchStatus($index, row.status)">
+                <i class="el-icon-circle-check" v-if="row.status == 1"></i>
+                <i class="el-icon-circle-cross" v-else></i>
+              </el-button>
+              <el-button v-if="row.group_id == 0 && $index > 1" type="text" @click="remove($index)">
+                <i class="el-icon-delete2"></i>
+              </el-button>
             </div>
-          </div>
-        </div>
-        <div class="tab-setting-box" v-if="module.module.template_code == 'group_tab_1xn'">
-          <div class="header-box">
-            <h4 class="module-title">页签设置</h4>
-          </div>
-          <div class="form-horizontal list-box">
-            <ul class="tab-title">
-              <li>排序</li>
-              <li>页签名称</li>
-              <li>描述</li>
-              <li></li>
-            </ul>
-            <ul class="tab-content">
-              <li v-for="tab in tabList">
-                <span class="sort-input"><input class="form-control" name="sort" type="input" :value="$index + 1" @keyup.13="changeSort(tabList,$index,$event)"></span>
-                <input class="form-control" name="name" type="input" v-model="tab.name">
-                <input class="form-control" name="desc" type="input" v-model="tab.desc">
-                <button v-if="tab.group_id != 0" type="button" class="btn" :class="{'btn-danger': parseInt(tab.status),'btn-success': !parseInt(tab.status)}" @click="switchStatus($index, tab.status)">
-                  <span class="fa fa-arrow-down" v-if="tab.status == 1"></span><span v-if="tab.status == 1">下线</span>
-                  <span class="fa fa-arrow-up" v-if="tab.status == 0"></span><span v-if="tab.status == 0">上线</span>
-                </button>
-                <button class="btn-remove" v-if="tab.group_id == 0" @click="remove($index)">
-                  <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="tab-setting-box" v-if="module.module.template_code == 'group_seckill_1xn'">
-          <div class="header-box" style="display:none;">
-            <h4 class="module-title">秒杀设置</h4>
-          </div>
-          <div class="form-horizontal list-box seckill-box">
-            <ul class="tab-title">
-              <li>排序</li>
-              <li>页签名称</li>
-              <li>描述</li>
-              <li>开始时间</li>
-              <li>结束时间</li>
-              <li></li>
-            </ul>
-            <ul class="tab-content">
-              <li v-for="tab in tabList">
-                <span class="sort-input"><input class="form-control" style="width: 50px;" name="sort" type="input" :value="$index + 1" @keyup.13="changeSort(tabList,$index,$event)"></span>
-                <input class="form-control" name="name" type="input" v-model="tab.name">
-                <input class="form-control" name="name" type="input" v-model="tab.desc">
-                <v-date-picker type="time" :date-result="tab.start_time*1000|date('%T')" @change="startTimeChange"></v-date-picker>
-                <v-date-picker type="time" :date-result="tab.end_time*1000|date('%T')" @change="endTimeChange"></v-date-picker>
-                <button v-if="tab.group_id != 0" type="button" class="btn" :class="{'btn-danger': parseInt(tab.status),'btn-success': !parseInt(tab.status)}" @click="switchStatus($index, tab.status)">
-                  <span class="fa fa-arrow-down" v-if="tab.status == 1"></span><span v-if="tab.status == 1">下线</span>
-                  <span class="fa fa-arrow-up" v-if="tab.status == 0"></span><span v-if="tab.status == 0">上线</span>
-                </button>
-                <button class="btn-remove" v-if="tab.group_id == 0" @click="remove($index)">
-                  <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
+          </el-table-column>
+        </el-table>
       </div>
-      <div slot="footer" class="clearfix">
-        <button class="modal-default-button btn btn-success" @click="addNewTab">新建</button>
-        <button class="modal-default-button btn btn-primary" @click.stop="saveModuleInfo">完成</button>
+      <div class="tab-setting-box" v-if="module.module.template_code == 'group_seckill_1xn'">
+        <h4 class="module-title">秒杀设置</h4>
+        <el-table :data="tabList">
+          <el-table-column width="80" label="排序" inline-template>
+            <span><el-input :value="$index + 1" @keyup.native.13="changeSort(tabList,$index,$event)"></el-input></span>
+          </el-table-column>
+          <el-table-column label="页签名称" inline-template>
+            <span><el-input v-model="row.name"></el-input></span>
+          </el-table-column>
+          <el-table-column label="描述" inline-template>
+            <span><el-input v-model="row.desc"></el-input></span>
+          </el-table-column>
+          <el-table-column width="200" label="开始时间" inline-template>
+            <el-time-select
+              class="time-box"
+              size="small"
+              :editable="false"
+              v-model="row.start_time"
+              :picker-options="{
+                start: '00:00',
+                step: '00:15',
+                end: '23:00'
+              }"
+              placeholder="选择时间"
+              @change="startTimeChange">
+            </el-time-select>
+          </el-table-column>
+          <el-table-column width="200" label="结束时间" inline-template>
+            <el-time-select
+              class="time-box"
+              size="small"
+              :editable="false"
+              v-model="row.end_time"
+              :picker-options="{
+                start: '00:00',
+                step: '00:15',
+                end: '23:00'
+              }"
+              placeholder="选择时间"
+              @change="endTimeChange">
+            </el-time-select>
+          </el-table-column>
+          <el-table-column width="80" align="center" inline-template>
+            <div>
+              <el-button v-if="row.group_id != 0" type="text" @click="switchStatus($index, row.status)">
+                <i class="el-icon-circle-check" v-if="row.status == 1"></i>
+                <i class="el-icon-circle-cross" v-else></i>
+              </el-button>
+              <el-button v-if="row.group_id == 0 && $index > 1" type="text" @click="remove($index)">
+                <i class="el-icon-delete2"></i>
+              </el-button>
+            </div>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div slot="footer">
+        <el-button type="success" @click="addNewTab">新建</el-button>
+        <el-button type="primary" @click.stop="saveModuleInfo">完成</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
+<style lang="scss">
+  .tab-setting-box {
+    input {margin: 5px 0;}
+    .time-box {
+      input {margin: 0;}
+    }
+  }
+</style>
 <script>
   import * as types from '../../../vuex/mutation-types'
   import {mapActions, mapGetters} from 'vuex'
@@ -96,8 +114,12 @@
       'group_id': 0,
       'name': '',
       'desc': '',
-      'start_time': Math.floor(new Date().getTime() / 1000),
-      'end_time': Math.floor((new Date('2038/01/01').getTime()) / 1000),
+      // 'start_time': Math.floor(new Date().getTime() / 1000),
+      // 不进行日期的判断改为字符串形式
+      'start_time': '00:00',
+      // 'end_time': Math.floor((new Date('2038/01/01').getTime()) / 1000),
+      // 不进行日期的判断改为字符串形式
+      'end_time': '23:00',
       'status': 1
     }
   }
@@ -108,9 +130,6 @@
       ...mapGetters({
         module: types.OPERATE_MODULE
       }),
-      component () {
-        return Object.assign({}, this.module)
-      },
       tabList () {
         return this.module['meta'].length ? this.module['meta'] : (this.module.module.template_code == 'group_tab_1xn' ? [
           {group_id: 0, name: 'Tab1', desc: '', status: 1},
@@ -118,13 +137,13 @@
         ] : [
           {
             group_id: 0, name: 'Tab1', desc: '', status: 1,
-            'start_time': Math.floor(new Date().getTime() / 1000),
-            'end_time': Math.floor((new Date('2038/01/01').getTime()) / 1000)
+            'start_time': '00:00',
+            'end_time': '23:00'
           },
           {
             group_id: 0, name: 'Tab2', desc: '', status: 1,
-            'start_time': Math.floor(new Date().getTime() / 1000),
-            'end_time': Math.floor((new Date('2038/01/01').getTime()) / 1000)
+            'start_time': '00:00',
+            'end_time': '23:00'
           }])
       },
       showDialog () {
@@ -139,29 +158,19 @@
     },
     methods: {
       ...mapActions({
-        update: types.UPDATE_MODULE,
-        deleteById: types.DELETE_MODULE
+        update: types.UPDATE_MODULE
       }),
+      // 时间改为字符串方式，用v-model双向绑定,该方法暂时弃用
       startTimeChange (time, event) {
         let index = (event.target).parents('li').index()
         let startTime = Math.floor(new Date(time).getTime() / 1000)
         this.tabList[index].start_time = startTime
       },
+      // 时间改为字符串方式，用v-model双向绑定,该方法暂时弃用
       endTimeChange (time, event) {
         let index = (event.target).parents('li').index()
         let endTime = Math.floor(new Date(time).getTime() / 1000)
         this.tabList[index].end_time = endTime
-      },
-      cancelDel () {
-        this.$refs.pop.showPopper = false
-      },
-      confirmDel () {
-        this.deleteById({
-          data: {id: this.component.id},
-          callback: (data) => {
-            this.$refs.pop.showPopper = false
-          }
-        })
       },
       closeDialog () {
         this.$emit('closeGroupDialog', false)
@@ -209,19 +218,15 @@
           Notification.error('页签名称不能为空')
           return
         }
-        this.updateModuleById(
-          {
+        this.update({
+          data: {
             id: this.module.id,
             name: this.module.name,
-            meta: JSON.stringify(this.tabList)}, (res) => {
-          if (res.ret == 1) {
-            this.tabList = res.data.meta
-            this.module = res.data
-            this.setCurrentPageModule(this.module)
-            this.show = false
+            meta: JSON.stringify(this.tabList)
+          },
+          callback: (res) => {
             Notification.success('保存成功')
-          } else {
-            Notification.error(res.error)
+            this.closeDialog()
           }
         })
       }

@@ -80,6 +80,8 @@
       switchBox (value) {
         this.modulesShow = value.modulesShow
         this.timelineShow = value.timelineShow
+        // 切换选择模块时，设置scrollTop为0，解决浮动样式问题
+        document.querySelector('body').scrollTop = 0
       },
       setFixedRight () {
         if (!this.isFixed) {
